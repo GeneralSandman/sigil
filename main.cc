@@ -3,14 +3,17 @@
 #include <cstring>
 #include <map>
 
-typedef bool (*command)(std::deque<std::string> &);
-std::map<std::string, command> string2command;
 
-class Command
+
+bool selectDbCommand(std::deque<std::string> &arg)
 {
-  private:
-  public:
-};
+    if(arg.size()!=1){
+        std::cout<<"arg number is error\n";
+        return false;
+    }
+    //set Server::m_nCurrDb to arg[0]
+
+}
 
 bool hsetCommand(std::deque<std::string> &arg)
 {
@@ -27,10 +30,12 @@ bool hsetCommand(std::deque<std::string> &arg)
     return true;
 }
 
-bool hgetCommand(std::deque<std::string> &arg){
-    std::cout<<"invoke hgetCommand\n";
-    if(arg.size()!=2){
-        std::cout<<"";
+bool hgetCommand(std::deque<std::string> &arg)
+{
+    std::cout << "invoke hgetCommand\n";
+    if (arg.size() != 2)
+    {
+        std::cout << "";
     }
 }
 
@@ -90,6 +95,7 @@ int getCommand()
 
 int main()
 {
+    string2command["select"] = selectDbCommand;
     string2command["hset"] = hsetCommand;
     string2command["linsert"] = linsertCommand;
 

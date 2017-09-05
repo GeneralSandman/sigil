@@ -3,8 +3,8 @@
 #include <string>
 #include <cstring>
 #include <iostream>
-namespace dict
-{
+#include "sigil.h"
+
 using namespace std;
 
 template <typename K>
@@ -72,17 +72,72 @@ class Dict
 							  m_pFunctor(nullptr),
 							  m_nReHash(0)
 	{
-		m_pTables[0] = new DictTable<K,V>;
-		m_pTables[1] = new DictTable<K,V>;
-		std::cout<<"class Dict construct\n";
+		m_pTables[0] = new DictTable<K, V>;
+		m_pTables[1] = new DictTable<K, V>;
+		std::cout << "class Dict construct\n";
 	};
 
-	
+	bool dictSet(K key, V value)
+	{
+		if (!m_nReHash)
+		{
+			return m_pTables[0]->insertPair(key, value);
+		}
+		else
+		{
+			return m_pTables[1]->insertPair(key, value);
+		}
+	}
+	V dictGet(K key)
+	{
+		if (!m_nReHash)
+		{
+			return m_pTables[0]->findPair(key);
+		}
+		else
+		{
+			return m_pTables[1]->findPair(key);
+		}
+	}
 
-	~Dict(){
-		std::cout<<"class Dict destory\n";
+	~Dict()
+	{
+		std::cout << "class Dict destory\n";
 	}
 };
+
+//regit
+bool hsetCommand(std::deque<std::string> &args)
+{
+	if (args.size() != 3)
+	{
+		std::cout << "error" << std::endl;
+		return false;
+	}
+	std::string dict = args[0];
+	std::string key = args[1];
+	std::string value = args[2];
+
+	shared_ptr<Dict<std::string,std::string>> d = Server::getCurrDb()->findDict(dict);
+	d->dictSet(key,value);
+}
+
+bool hmsetCommand(std::deque<std::string> &args)
+{
+}
+
+bool hgetCommand(std::deque<std::string> &args)
+{
+	if (args.size() != 2)
+	{
+		std::cout << "error" << std::endl;
+		return false;
+	}
+}
+
+Server::regitCommand("hset", hsetCommand);
+Server::regitCommand("hmset", hmsetCommand);
+Server::regitCommand("hget", hgetCommand);
 
 //........api.............//
 
@@ -199,7 +254,6 @@ DictTable<K, V>::~DictTable()
 	m_nSize = 0;
 	m_nSizeMask = 0;
 	m_nUsed = 0;
-}
 }
 
 #endif
