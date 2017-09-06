@@ -4,6 +4,7 @@
 #include <cstring>
 #include <iostream>
 #include "sigil.h"
+#include "command.h"
 
 using namespace std;
 
@@ -68,7 +69,7 @@ class Dict
 	int m_nReHash;
 
   public:
-	Dict(std::string &name) : m_nDictName(name),
+	Dict(const std::string &name) : m_nDictName(name),
 							  m_pFunctor(nullptr),
 							  m_nReHash(0)
 	{
@@ -107,37 +108,12 @@ class Dict
 };
 
 //regit
-bool hsetCommand(std::deque<std::string> &args)
-{
-	if (args.size() != 3)
-	{
-		std::cout << "error" << std::endl;
-		return false;
-	}
-	std::string dict = args[0];
-	std::string key = args[1];
-	std::string value = args[2];
 
-	shared_ptr<Dict<std::string,std::string>> d = Server::getCurrDb()->findDict(dict);
-	d->dictSet(key,value);
-}
+bool hsetCommand(std::deque<std::string> &args);
+bool hmsetCommand(std::deque<std::string> &args);
+bool hgetCommand(std::deque<std::string> &args);
 
-bool hmsetCommand(std::deque<std::string> &args)
-{
-}
-
-bool hgetCommand(std::deque<std::string> &args)
-{
-	if (args.size() != 2)
-	{
-		std::cout << "error" << std::endl;
-		return false;
-	}
-}
-
-Server::regitCommand("hset", hsetCommand);
-Server::regitCommand("hmset", hmsetCommand);
-Server::regitCommand("hget", hgetCommand);
+// RegisterCommand("hset",hsetCommand);
 
 //........api.............//
 
