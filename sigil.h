@@ -2,11 +2,17 @@
 #define SIGIL_H
 
 #include <iostream>
+#include <cstring>
 #include <map>
 #include <vector>
 #include <memory>
 #include <deque>
 #include "dict.h"
+
+bool listDbsCommand(std::deque<std::string> &args);
+bool createDbCommand(std::deque<std::string> &args);
+bool selectCurrDbCommand(std::deque<std::string> &args);
+bool showCurrDbCommand(std::deque<std::string> &args);
 
 template <typename K, typename V>
 class Dict;
@@ -30,20 +36,24 @@ public:
 class Server
 {
 private:
+  static Server *serverInstance;
   std::map<std::string, std::shared_ptr<Db>> m_nDbs;
   static std::shared_ptr<Db> m_nCurrDb;
   static std::map<std::string, command> m_nCommand;
+  Server();
 
 public:
-  Server();
   void listDbs(void);
   bool createDb(const std::string &db);
+  bool deleteDb(const std::string &db);
   bool selectCurrDb(const std::string &db);
   void showCurrDb(void);
-  static Server &getServerInstace()
+  static Server *getServerInstace()
   {
-    static Server m_nServer;
-    return m_nServer;
+    if (serverInstance == nullptr)
+      serverInstance = new Server();
+
+    return serverInstance;
   }
   void setCurrDb(const std::string &db);
   static std::shared_ptr<Db> getCurrDb()
@@ -61,67 +71,31 @@ public:
 class Command
 {
 private:
-  std::shared_ptr<Server> m_pServer;
-  std::shared_ptr<Db> m_pDb;
+  Server *m_pServer;
+  Db *m_pDb;
   char m_nStr[256];
   std::string m_nName;
   std::deque<std::string> m_nArgs;
 
-  int m_fGetCommand()
-  {
-    std::cin.getline(m_nStr, 256, '\n');
-  }
-  void m_fParseCommand()
-  {
-    int length = strlen(m_nStr);
-    std::string tmp;
-
-    for (int i = 0; i < length; i++)
-    {
-      if (m_nStr[i] != ' ')
-      {
-        tmp += m_nStr[i];
-      }
-      else
-      {
-        if (!tmp.empty())
-          m_nArgs.push_back(tmp);
-        tmp = "";
-      }
-    }
-    if (!tmp.empty())
-      m_nArgs.push_back(tmp);
-
-    m_nName = m_nArgs.front();
-    m_nArgs.pop_front();
-  }
-  void m_fInvokeCommand()
-  {
-    auto com = m_pServer->findCommand(m_nName);
-    if (com != nullptr)
-    {
-      com(m_nArgs);
-    }
-    else
-    {
-      std::cout << "command error:" << m_nName << "\n";
-    }
-  }
+  int m_fGetCommand();
+  void m_fParseCommand();
+  void m_fInvokeCommand();
 
 public:
-  Command(std::shared_ptr<Server> s)
+  Command(Server *s)
   {
     m_pServer = s;
   }
   void waitCommand()
   {
+    memset(m_nStr, 0, 256);
+    m_nName = "";
+    m_nArgs.clear();
     m_fGetCommand();
     m_fParseCommand();
     m_fInvokeCommand();
   }
 };
-
-typedef bool (*command)(std::deque<std::string> &);
 
 class RegisterAction
 {
