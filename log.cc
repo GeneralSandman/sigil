@@ -63,9 +63,25 @@ std::ostream &Logger::log(log_level level,
 
     time_t t = time(0);
     char tmpBuf[156];
-    strftime(tmpBuf, 156, "[%Y%m%d%H%M%S]", localtime(&t)); //format date and time.
+    strftime(tmpBuf, 156, "%Y%m%d%H%M%S", localtime(&t)); //format date and time.
 
-    return getStream(level) << tmpBuf << "--"
+    std::string level_string = "";
+    switch (level)
+    {
+    case Info:
+        level_string = "Info";
+    case Warning:
+        level_string = "Warning";
+    case Error:
+        level_string = "Error";
+    case Fatal:
+        level_string = "Fatal";
+    }
+
+    return getStream(level) << "[" << tmpBuf << "]"
+                            << "--"
+                            << "[" << level_string << "]"
+                            << "--"
                             << "function (" << function << ")"
                             << "line " << line << ":"
                             << std::flush;

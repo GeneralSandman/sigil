@@ -98,17 +98,7 @@ public:
   }
 };
 
-class RegisterAction
-{
-public:
-  RegisterAction(const std::string &name, command c)
-  {
-    Server::regitCommand(name, c);
-    std::cout << "register " << name << " function\n";
-  }
-};
-
 #define RegisterCommand(name, c) \
-  RegisterAction Rigist##name(name, c)
+  Server::regitCommand(name, c)
 
 #endif

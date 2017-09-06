@@ -1,4 +1,5 @@
 #include "sigil.h"
+#include "log.h"
 #include <iostream>
 
 Server *Server::serverInstance = nullptr;
@@ -7,7 +8,7 @@ std::map<std::string, command> Server::m_nCommand;
 
 Db::Db(const std::string &name) : m_nName(name)
 {
-    std::cout << "class Db construct\n";
+    LOG(Info) << "create db(" << name << ")" << std::endl;
 }
 
 std::string &Db::getName()
@@ -28,7 +29,7 @@ std::shared_ptr<Dict<std::string, std::string>> Db::findDict(const std::string d
 }
 Db::~Db()
 {
-    std::cout << "class Db destory\n";
+    LOG(Info) << "delete db(" << m_nName << ")" << std::endl;
 }
 
 ////server api
@@ -38,7 +39,7 @@ Server::Server()
     createDb("init");
     selectCurrDb("init");
 
-    std::cout << "class server constuct\n";
+    LOG(Debug) << "class Server construct\n";
 }
 
 void Server::listDbs(void)
@@ -46,6 +47,7 @@ void Server::listDbs(void)
     std::cout << m_nDbs.size() << ":" << std::endl;
     for (auto t : m_nDbs)
         std::cout << t.first << endl;
+    LOG(Info) << "list dbs" << std::endl;
 }
 
 bool Server::createDb(const std::string &db)
@@ -113,7 +115,7 @@ command Server::findCommand(const std::string &n)
 }
 Server::~Server()
 {
-    std::cout << "class Server destory\n";
+    LOG(Debug) << "class Server destory\n";
 }
 //////
 
@@ -165,6 +167,7 @@ bool listDbsCommand(std::deque<std::string> &args)
 {
     // std::cout << "invoke listDbsCommand\n";
     Server::getServerInstace()->listDbs();
+    return true;
 }
 bool createDbCommand(std::deque<std::string> &args)
 {
@@ -173,6 +176,7 @@ bool createDbCommand(std::deque<std::string> &args)
     {
         Server::getServerInstace()->createDb(t);
     }
+    return true;
 }
 bool deleteDbCommand(std::deque<std::string> &args)
 {
@@ -181,6 +185,7 @@ bool deleteDbCommand(std::deque<std::string> &args)
     {
         Server::getServerInstace()->deleteDb(t);
     }
+    return true;
 }
 bool selectCurrDbCommand(std::deque<std::string> &args)
 {
@@ -202,3 +207,18 @@ bool showCurrDbCommand(std::deque<std::string> &args)
     }
     Server::getServerInstace()->showCurrDb();
 }
+
+///
+
+// RegisterCommand("dbs", listDbsCommand);
+// RegisterCommand("createdb", createDbCommand);
+// RegisterCommand("deletedb", deleteDbCommand);
+// RegisterCommand("select", selectCurrDbCommand);
+// RegisterCommand("db", showCurrDbCommand);
+///
+
+// Server::regitCommand("dbs", listDbsCommand);
+// Server::regitCommand("createdb", createDbCommand);
+// Server::regitCommand("deletedb", deleteDbCommand);
+// Server::regitCommand("select", selectCurrDbCommand);
+// Server::regitCommand("db", showCurrDbCommand);

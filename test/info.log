@@ -3,3 +3,7 @@
 [20170906175648]--function (main)line 13:2
 [20170906175649]--function (main)line 13:3
 
+[20170906182023]--[Fatal]--function (Db)line 11:create db(init)
+[20170906182030]--[Fatal]--function (listDbs)line 50:list dbs
+[20170906182036]--[Fatal]--function (Db)line 11:create db(li)
+[20170906182050]--[Fatal]--function (listDbs)line 50:list dbs

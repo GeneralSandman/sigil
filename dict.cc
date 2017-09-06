@@ -1,4 +1,5 @@
 #include "dict.h"
+#include "sigil.h"
 #include <iostream>
 
 bool hsetCommand(std::deque<std::string> &args)
@@ -20,7 +21,7 @@ bool hsetCommand(std::deque<std::string> &args)
     }
     else
     {
-        std::cout<<"can't find this dict"<<std::endl;
+        std::cout << "can't find this dict" << std::endl;
     }
 }
 
@@ -44,3 +45,10 @@ bool hgetCommand(std::deque<std::string> &args)
     auto res = d->dictGet(key);
     std::cout << res << endl;
 }
+
+///
+// Server::regitCommand("hset", hsetCommand);
+// Server::regitCommand("hmset", hmsetCommand);
+// Server::regitCommand("hget", hgetCommand);
+
+///

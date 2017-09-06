@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 typedef enum log_level {
+  Debug,
   Info,
   Warning,
   Error,

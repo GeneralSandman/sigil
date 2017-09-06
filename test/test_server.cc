@@ -1,5 +1,6 @@
 #include "../dict.h"
 #include "../sigil.h"
+#include "../log.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -16,23 +17,29 @@ void welcome()
 }
 int main()
 {
+    initLogger("info.log", "warn.log", "error.log");
+
     Server *server = Server::getServerInstace();
-    Server::regitCommand("hset", hsetCommand);
-    Server::regitCommand("hmset", hmsetCommand);
-    Server::regitCommand("hget", hgetCommand);
-    Server::regitCommand("dbs", listDbsCommand);
-    Server::regitCommand("createdb", createDbCommand);
-    Server::regitCommand("deletedb", deleteDbCommand);
-    Server::regitCommand("select", selectCurrDbCommand);
-    Server::regitCommand("db", showCurrDbCommand);
+
+    RegisterCommand("dbs", listDbsCommand);
+    RegisterCommand("createdb", createDbCommand);
+    RegisterCommand("deletedb", deleteDbCommand);
+    RegisterCommand("select", selectCurrDbCommand);
+    RegisterCommand("db", showCurrDbCommand);
+
+    RegisterCommand("hset", hsetCommand);
+    RegisterCommand("hmset", hmsetCommand);
+    RegisterCommand("hget", hgetCommand);
 
     welcome();
-    Command com(server);    
+    Command com(server);
     while (1)
     {
         std::cout << "sigil>:";
         com.waitCommand();
     }
+
+    delete Logger::getLoggerInstance();
 
     return 0;
 }
