@@ -22,14 +22,12 @@ int main()
     Server::regitCommand("hget", hgetCommand);
     Server::regitCommand("dbs", listDbsCommand);
     Server::regitCommand("createdb", createDbCommand);
-    // Server::regitCommand("deletedb", deleteDbCommand);
+    Server::regitCommand("deletedb", deleteDbCommand);
     Server::regitCommand("select", selectCurrDbCommand);
     Server::regitCommand("db", showCurrDbCommand);
 
-    Command com(server);
-
     welcome();
-
+    Command com(server);    
     while (1)
     {
         std::cout << "sigil>:";

@@ -43,6 +43,7 @@ Server::Server()
 
 void Server::listDbs(void)
 {
+    std::cout << m_nDbs.size() << ":" << std::endl;
     for (auto t : m_nDbs)
         std::cout << t.first << endl;
 }
@@ -51,10 +52,16 @@ bool Server::createDb(const std::string &db)
 {
     std::shared_ptr<Db> newdb = make_shared<Db>(db);
     m_nDbs[db] = newdb;
+    return true;
 }
 
 bool Server::deleteDb(const std::string &db)
 {
+    if (db == "init")
+    {
+        std::cout << "can't delete init db\n";
+        return false;
+    }
     auto p = m_nDbs.find(db);
     if (p != m_nDbs.end())
     {
@@ -62,7 +69,7 @@ bool Server::deleteDb(const std::string &db)
     }
     else
     {
-        std::cout << "can't delete (" << db << ")" << endl;
+        std::cout << "can't find " << db << endl;
     }
 }
 
@@ -156,12 +163,12 @@ void Command::m_fInvokeCommand()
 
 bool listDbsCommand(std::deque<std::string> &args)
 {
-    std::cout << "invoke listDbsCommand\n";
+    // std::cout << "invoke listDbsCommand\n";
     Server::getServerInstace()->listDbs();
 }
 bool createDbCommand(std::deque<std::string> &args)
 {
-    std::cout << "invoke createDbCommand\n";
+    // std::cout << "invoke createDbCommand\n";
     for (auto t : args)
     {
         Server::getServerInstace()->createDb(t);
@@ -169,7 +176,7 @@ bool createDbCommand(std::deque<std::string> &args)
 }
 bool deleteDbCommand(std::deque<std::string> &args)
 {
-    std::cout << "invoke deleteDbCommand\n";
+    // std::cout << "invoke deleteDbCommand\n";
     for (auto t : args)
     {
         Server::getServerInstace()->deleteDb(t);

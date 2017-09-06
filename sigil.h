@@ -11,6 +11,7 @@
 
 bool listDbsCommand(std::deque<std::string> &args);
 bool createDbCommand(std::deque<std::string> &args);
+bool deleteDbCommand(std::deque<std::string> &args);
 bool selectCurrDbCommand(std::deque<std::string> &args);
 bool showCurrDbCommand(std::deque<std::string> &args);
 
