@@ -35,4 +35,4 @@
 .vscode
 .idea/*
 ./java/code/*
-test/*.log
+./test/*.log
