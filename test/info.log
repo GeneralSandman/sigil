@@ -20,4 +20,7 @@
 [20170907095632]--[Fatal]--function (lpushCommand)line 8:command (lpush)
 [20170907095632]--[Fatal]--function (ListNode)line 25:class ListNode construrct
 [20170907095636]--[Fatal]--function (lclearCommand)line 96:command (lclear)
-[20170907095636]--[Fatal]--function (~ListNode)line 37:
+[20170907095636]--[Fatal]--function (~ListNode)line 37:[20170907142658]--[Fatal]--function (Db)line 11:create db(init)
+[20170907142705]--[Fatal]--function (listDbsCommand)line 197:command (dbs)
+[20170907142705]--[Fatal]--function (listDbs)line 79:list dbs
+[20170907142710]--[Fatal]--function (selectCurrDbCommand)line 224:command (select)

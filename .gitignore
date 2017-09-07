@@ -34,5 +34,6 @@
 
 .vscode
 .idea/*
-./java/code/*
-./test/*.log
+./test/error.log
+./test/info.log
+./test/warn.log

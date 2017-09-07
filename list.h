@@ -388,6 +388,7 @@ ListNode<T> *ListIter<T>::getListNext()
 
 #include <string>
 #include <deque>
+bool lmemCommand(std::deque<std::string> &args);
 bool lpushCommand(std::deque<std::string> &args);
 bool rpushCommand(std::deque<std::string> &args);
 bool lpopCommand(std::deque<std::string> &args);

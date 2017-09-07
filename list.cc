@@ -3,6 +3,11 @@
 #include <deque>
 #include <string>
 
+bool lmemCommand(std::deque<std::string> &args)
+{
+    LOG(Info) << "command (lmem)" << std::endl;
+}
+
 bool lpushCommand(std::deque<std::string> &args)
 {
     LOG(Info) << "command (lpush)" << std::endl;

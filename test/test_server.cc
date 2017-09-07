@@ -30,6 +30,7 @@ int main()
     RegisterCommand("db", showCurrDbCommand);
 
     //list
+    RegisterCommand("lmem", lmemCommand);
     RegisterCommand("lpush", lpushCommand);
     RegisterCommand("rpush", rpushCommand);
     RegisterCommand("lpop", lpopCommand);
@@ -50,7 +51,7 @@ int main()
     Command com(server);
     while (1)
     {
-        std::cout << "*sigil>:";
+        std::cout << "sigil> ";
         com.waitCommand();
     }
 

@@ -37,6 +37,11 @@ deletedb <db1> <db2>
 |:-------:|:-------:|
 |LPUSH key value1 [value2] |在key的头部插入值|
 
+- 获取所有元素
+```
+lmem key
+```
+
 - 在key的头部插入值
 ```
 lpush key value1 [value2]
