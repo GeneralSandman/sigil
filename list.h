@@ -292,4 +292,17 @@ ListNode<T> *ListIter<T>::getListNext()
 //end ListIter
 }
 
+#include <string>
+#include <deque>
+bool lpushCommand(std::deque<std::string> &args);
+bool rpushCommand(std::deque<std::string> &args);
+bool lpopCommand(std::deque<std::string> &args);
+bool rpopCommand(std::deque<std::string> &args);
+bool llenCommand(std::deque<std::string> &args);
+bool lindexCommand(std::deque<std::string> &args);
+bool linsertCommand(std::deque<std::string> &args);
+bool lrangeCommand(std::deque<std::string> &args);
+bool lremCommand(std::deque<std::string> &args);
+bool lclearCommand(std::deque<std::string> &args);
+
 #endif //DLIST_H

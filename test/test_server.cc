@@ -1,6 +1,7 @@
 #include "../dict.h"
 #include "../sigil.h"
 #include "../log.h"
+#include "../list.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -21,12 +22,26 @@ int main()
 
     Server *server = Server::getServerInstace();
 
+    //basic
     RegisterCommand("dbs", listDbsCommand);
     RegisterCommand("createdb", createDbCommand);
     RegisterCommand("deletedb", deleteDbCommand);
     RegisterCommand("select", selectCurrDbCommand);
     RegisterCommand("db", showCurrDbCommand);
 
+    //list
+    RegisterCommand("lpush", lpushCommand);
+    RegisterCommand("rpush", rpushCommand);
+    RegisterCommand("lpop", lpopCommand);
+    RegisterCommand("rpop", rpopCommand);
+    RegisterCommand("llen", llenCommand);
+    RegisterCommand("lindex", lindexCommand);
+    RegisterCommand("linsert", linsertCommand);
+    RegisterCommand("lrange", lrangeCommand);
+    RegisterCommand("lrem", lremCommand);
+    RegisterCommand("lclear", lclearCommand);
+
+    //hash
     RegisterCommand("hset", hsetCommand);
     RegisterCommand("hmset", hmsetCommand);
     RegisterCommand("hget", hgetCommand);

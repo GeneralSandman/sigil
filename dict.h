@@ -69,8 +69,8 @@ class Dict
 
   public:
 	Dict(const std::string &name) : m_nDictName(name),
-							  m_pFunctor(nullptr),
-							  m_nReHash(0)
+									m_pFunctor(nullptr),
+									m_nReHash(0)
 	{
 		m_pTables[0] = new DictTable<K, V>;
 		m_pTables[1] = new DictTable<K, V>;
@@ -98,6 +98,13 @@ class Dict
 		{
 			return m_pTables[1]->findPair(key);
 		}
+	}
+	int dictLen()
+	{
+		if (!m_nReHash)
+			return m_pTables[0].m_nUsed;
+		else
+			return m_pTables[0].m_nUsed + m_pTables[1].m_nUsed;
 	}
 
 	~Dict()

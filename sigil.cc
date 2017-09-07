@@ -165,13 +165,15 @@ void Command::m_fInvokeCommand()
 
 bool listDbsCommand(std::deque<std::string> &args)
 {
-    // std::cout << "invoke listDbsCommand\n";
+    LOG(Info) << "command (dbs)" << std::endl;
+
     Server::getServerInstace()->listDbs();
     return true;
 }
 bool createDbCommand(std::deque<std::string> &args)
 {
-    // std::cout << "invoke createDbCommand\n";
+    LOG(Info) << "command (createdb)" << std::endl;
+
     for (auto t : args)
     {
         Server::getServerInstace()->createDb(t);
@@ -180,7 +182,8 @@ bool createDbCommand(std::deque<std::string> &args)
 }
 bool deleteDbCommand(std::deque<std::string> &args)
 {
-    // std::cout << "invoke deleteDbCommand\n";
+    LOG(Info) << "command (deletedb)" << std::endl;
+
     for (auto t : args)
     {
         Server::getServerInstace()->deleteDb(t);
@@ -189,7 +192,8 @@ bool deleteDbCommand(std::deque<std::string> &args)
 }
 bool selectCurrDbCommand(std::deque<std::string> &args)
 {
-    std::cout << "invoke selectCurrDbCommand\n";
+    LOG(Info) << "command (select)" << std::endl;
+
     if (args.size() != 1)
     {
         std::cout << "error" << std::endl;
@@ -199,7 +203,8 @@ bool selectCurrDbCommand(std::deque<std::string> &args)
 }
 bool showCurrDbCommand(std::deque<std::string> &args)
 {
-    std::cout << "invoke showCurrDbCommand\n";
+    LOG(Info) << "command (db)" << std::endl;
+
     if (args.size() != 0)
     {
         std::cout << "error" << std::endl;

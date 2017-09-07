@@ -1,10 +1,11 @@
 #include "dict.h"
 #include "sigil.h"
+#include "log.h"
 #include <iostream>
 
 bool hsetCommand(std::deque<std::string> &args)
 {
-    std::cout << "invoke hsetCommand()\n";
+    LOG(Info) << "command (hset)" << std::endl;
     if (args.size() != 3)
     {
         std::cout << "error" << std::endl;
@@ -27,12 +28,12 @@ bool hsetCommand(std::deque<std::string> &args)
 
 bool hmsetCommand(std::deque<std::string> &args)
 {
-    std::cout << "invoke hmsetCommand()\n";
+    LOG(Info) << "command (hmset)" << std::endl;
 }
 
 bool hgetCommand(std::deque<std::string> &args)
 {
-    std::cout << "invoke hgetCommand()\n";
+    LOG(Info) << "command (hget)" << std::endl;
 
     if (args.size() != 2)
     {
@@ -44,6 +45,18 @@ bool hgetCommand(std::deque<std::string> &args)
     std::shared_ptr<Dict<std::string, std::string>> d = Server::getCurrDb()->findDict(dict);
     auto res = d->dictGet(key);
     std::cout << res << endl;
+}
+
+bool hmgetCommand(std::deque<std::string> &args)
+{
+    LOG(Info) << "command (hmget)" << std::endl;
+}
+
+bool hlenCommand(std::deque<std::string> &args)
+{
+    LOG(Info) << "command (hlen)" << std::endl;
+    // std::shared_ptr<Dict<std::string, std::string>> d = Server::getCurrDb()->findDict(dict);
+
 }
 
 ///
