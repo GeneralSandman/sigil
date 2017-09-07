@@ -50,7 +50,7 @@ int main()
     Command com(server);
     while (1)
     {
-        std::cout << "sigil>:";
+        std::cout << "*sigil>:";
         com.waitCommand();
     }
 

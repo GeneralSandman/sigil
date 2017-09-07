@@ -15,18 +15,47 @@ std::string &Db::getName()
 {
     return m_nName;
 }
-std::shared_ptr<Dict<std::string, std::string>> Db::findDict(const std::string dict)
+shared_of_dict Db::findDict(const std::string &dict)
 {
+    if (m_nPrevDict == dict)
+        return m_pPrevDict;
+
+    //have to find or create new dict
+    m_nPrevDict = dict;
     auto p = m_nDicts.find(dict);
-    if (p == m_nDicts.end())
+    if (p == m_nDicts.end()) //create new dict
     {
         std::shared_ptr<Dict<std::string, std::string>> newdict =
             make_shared<Dict<std::string, std::string>>(dict);
         m_nDicts[dict] = newdict;
-        return newdict;
+        m_pPrevDict = newdict;
     }
-    return p->second;
+    else
+        m_pPrevDict = p->second;
+
+    return m_pPrevDict;
 }
+
+shared_of_list Db::findList(const std::string &list)
+{
+    if (m_nPrevList == list)
+        return m_pPrevList;
+
+    //have to find or create new list
+    m_nPrevList = list;
+    auto p = m_nLists.find(list);
+    if (p == m_nLists.end()) //create new list
+    {
+        shared_of_list newlist =
+            make_shared<List<std::string>>(list);
+        m_nLists[list] = newlist;
+        m_pPrevList = newlist;
+    }
+    else
+        m_pPrevList = p->second;
+    return m_pPrevList;
+}
+
 Db::~Db()
 {
     LOG(Info) << "delete db(" << m_nName << ")" << std::endl;

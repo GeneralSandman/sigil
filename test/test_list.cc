@@ -7,15 +7,27 @@ using namespace std;
 
 int main()
 {
+
     {
-        list::List<string> l;
+        List<string> l;
         for (int i = 0; i < 8; i++)
         {
-            list::ListNode<string> *newnode =
-                new list::ListNode<string>("a");
-            l.addNodeHead(newnode);
-            sleep(1.5);
+            l.add_head("a");
         }
+
+        for (int i = 0; i < 8; i++)
+            cout << l.pop_tail();
+    }
+
+    {
+        List<string> l;
+        for (int i = 0; i < 8; i++)
+        {
+            l.add_head("a");
+        }
+
+        for (int i = 0; i < 8; i++)
+            cout << l.pop_head();
     }
     return 0;
 }

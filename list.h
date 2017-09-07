@@ -5,8 +5,9 @@
 
 #define AL_START_HEAD 0
 #define AL_START_TAIL 1
-namespace list
-{
+
+#define After 0
+#define Before 1
 
 template <typename T>
 class ListNode
@@ -41,20 +42,33 @@ template <typename T>
 class List
 {
 public:
+  std::string m_nName;
   size_t m_nLen;
   ListNode<T> *m_pHead;
   ListNode<T> *m_pTail;
 
+  bool m_fInsertNode(ListNode<T> *, ListNode<T> *, int);
+  bool m_fDeleteNode(ListNode<T> *);
+  bool m_fAddNodeHead(ListNode<T> *);
+  bool m_fAddNodeTail(ListNode<T> *);
+  bool m_fDeleteNodeHead();
+  bool m_fDeleteNodeTail();
+
+  ListNode<T> *m_fFindNode(const T &m_nValue);
+  ListNode<T> *m_fFindNodeIndex(long index);
+
 public:
-  List();
+  List(const std::string &);
   size_t getLen() { return m_nLen; }
-  bool insertNode(ListNode<T> *, ListNode<T> *, int);
-  bool deleteNode(ListNode<T> *);
-  bool addNodeHead(ListNode<T> *);
-  bool addNodeTail(ListNode<T> *);
+  bool insert(T, T, int flag = 0);
+  bool dele(T);
+  bool add_head(T);
+  bool add_tail(T);
+  T pop_head();
+  T pop_tail();
+  bool clear();
+
   List dupLict();
-  ListNode<T> *findNode(const T &m_nValue);
-  ListNode<T> *findNodeIndex(long index);
   ~List();
 };
 
@@ -79,8 +93,9 @@ public:
 
 // List api-------------------
 template <typename T>
-List<T>::List()
+List<T>::List(const std::string &name)
 {
+  m_nName = name;
   m_nLen = 0;
   m_pHead = nullptr;
   m_pTail = nullptr;
@@ -88,7 +103,7 @@ List<T>::List()
 }
 
 template <typename T>
-bool List<T>::insertNode(ListNode<T> *newnode, ListNode<T> *oldnode, int after)
+bool List<T>::m_fInsertNode(ListNode<T> *newnode, ListNode<T> *oldnode, int after)
 {
 
   if (after)
@@ -119,7 +134,7 @@ bool List<T>::insertNode(ListNode<T> *newnode, ListNode<T> *oldnode, int after)
 }
 
 template <typename T>
-bool List<T>::deleteNode(ListNode<T> *node)
+bool List<T>::m_fDeleteNode(ListNode<T> *node)
 {
 
   if (node->m_pPrev)
@@ -133,11 +148,13 @@ bool List<T>::deleteNode(ListNode<T> *node)
     m_pTail = node->m_pPrev;
 
   m_nLen--;
+  delete node;
+  node = nullptr;
   return true;
 }
 
 template <typename T>
-bool List<T>::addNodeHead(ListNode<T> *node)
+bool List<T>::m_fAddNodeHead(ListNode<T> *node)
 {
 
   if (getLen() == 0)
@@ -158,7 +175,7 @@ bool List<T>::addNodeHead(ListNode<T> *node)
 }
 
 template <typename T>
-bool List<T>::addNodeTail(ListNode<T> *node)
+bool List<T>::m_fAddNodeTail(ListNode<T> *node)
 {
   if (getLen() == 0)
   {
@@ -175,6 +192,20 @@ bool List<T>::addNodeTail(ListNode<T> *node)
   m_nLen++;
   return true;
 }
+template <typename T>
+bool List<T>::m_fDeleteNodeHead()
+{
+  if (m_nLen == 0)
+    return false;
+  m_fDeleteNode(m_pHead);
+}
+template <typename T>
+bool List<T>::m_fDeleteNodeTail()
+{
+  if (m_nLen == 0)
+    return false;
+  m_fDeleteNode(m_pTail);
+}
 
 template <typename T>
 List<T> List<T>::dupLict()
@@ -182,7 +213,7 @@ List<T> List<T>::dupLict()
 }
 
 template <typename T>
-ListNode<T> *List<T>::findNode(const T &v)
+ListNode<T> *List<T>::m_fFindNode(const T &v)
 {
   ListNode<T> *res;
   res = m_pHead;
@@ -200,7 +231,7 @@ ListNode<T> *List<T>::findNode(const T &v)
 }
 
 template <typename T>
-ListNode<T> *List<T>::findNodeIndex(long index)
+ListNode<T> *List<T>::m_fFindNodeIndex(long index)
 {
   ListNode<T> *res = nullptr;
   if (index >= 0)
@@ -228,6 +259,70 @@ ListNode<T> *List<T>::findNodeIndex(long index)
   }
 
   return res;
+}
+template <typename T>
+bool List<T>::insert(T newvalue, T oldvalue, int flag)
+{
+  ListNode<T> *newnode =
+      new ListNode<T>(newvalue);
+  ListNode<T> *oldnode = m_fFindNode(oldvalue);
+  if (oldnode == nullptr)
+    return false;
+  return m_fInsertNode(newnode, oldnode, flag);
+}
+template <typename T>
+bool List<T>::dele(T value)
+{
+  ListNode<T> *node = m_fFindNode(value);
+  return m_fDeleteNode(node);
+}
+template <typename T>
+bool List<T>::add_head(T value)
+{
+  ListNode<T> *newnode =
+      new ListNode<T>(value);
+  return m_fAddNodeHead(newnode);
+}
+template <typename T>
+bool List<T>::add_tail(T value)
+{
+  ListNode<T> *newnode =
+      new ListNode<T>(value);
+  return m_fAddNodeTail(newnode);
+}
+template <typename T>
+T List<T>::pop_head()
+{
+  if (m_nLen)
+  {
+    T res = m_pHead->m_nValue;
+    m_fDeleteNodeHead();
+    return res;
+  }
+}
+
+template <typename T>
+T List<T>::pop_tail()
+{
+  if (m_nLen)
+  {
+    T res = m_pTail->m_nValue;
+    m_fDeleteNodeTail();
+    return res;
+  }
+}
+
+template <typename T>
+bool List<T>::clear()
+{
+  while (m_nLen)
+  {
+    m_fDeleteNodeHead();
+  }
+  if (!m_nLen)
+    return true;
+  else
+    return false;
 }
 
 template <typename T>
@@ -290,7 +385,6 @@ ListNode<T> *ListIter<T>::getListNext()
 }
 
 //end ListIter
-}
 
 #include <string>
 #include <deque>

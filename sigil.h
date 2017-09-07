@@ -8,6 +8,7 @@
 #include <memory>
 #include <deque>
 #include "dict.h"
+#include "list.h"
 
 bool listDbsCommand(std::deque<std::string> &args);
 bool createDbCommand(std::deque<std::string> &args);
@@ -20,17 +21,25 @@ class Dict;
 
 typedef bool (*command)(std::deque<std::string> &);
 typedef std::shared_ptr<Dict<std::string, std::string>> shared_of_dict;
-
+typedef std::shared_ptr<List<std::string>> shared_of_list;
 class Db
 {
 private:
   std::string m_nName;
+
+  std::string m_nPrevDict;//store the prev mainpulated dict
+  shared_of_dict m_pPrevDict;
   std::map<std::string, shared_of_dict> m_nDicts;
+
+  std::string m_nPrevList;//store the prev mainpulated list
+  shared_of_list m_pPrevList;
+  std::map<std::string, shared_of_list> m_nLists;
 
 public:
   Db(const std::string &name);
   std::string &getName();
-  std::shared_ptr<Dict<std::string, std::string>> findDict(const std::string dict);
+  shared_of_dict findDict(const std::string &dict);
+  shared_of_list findList(const std::string &list);
   ~Db();
 };
 
