@@ -5,7 +5,9 @@
 
 bool hsetCommand(std::deque<std::string> &args)
 {
+    LOG(Debug) << std::endl;
     LOG(Info) << "command (hset)" << std::endl;
+
     if (args.size() != 3)
     {
         std::cout << "error" << std::endl;
@@ -23,7 +25,9 @@ bool hsetCommand(std::deque<std::string> &args)
 
 bool hmsetCommand(std::deque<std::string> &args)
 {
+    LOG(Debug) << std::endl;    
     LOG(Info) << "command (hmset)" << std::endl;
+
     if (args.size() % 2 == 0)
     {
         std::cout << "error" << std::endl;
@@ -49,6 +53,7 @@ bool hmsetCommand(std::deque<std::string> &args)
 
 bool hgetCommand(std::deque<std::string> &args)
 {
+    LOG(Debug) << std::endl;    
     LOG(Info) << "command (hget)" << std::endl;
 
     if (args.size() != 2)
@@ -65,6 +70,7 @@ bool hgetCommand(std::deque<std::string> &args)
 
 bool hmgetCommand(std::deque<std::string> &args)
 {
+    LOG(Debug) << std::endl;    
     LOG(Info) << "command (hmget)" << std::endl;
 
     if (args.size() <= 1)
@@ -89,7 +95,9 @@ bool hmgetCommand(std::deque<std::string> &args)
 
 bool hlenCommand(std::deque<std::string> &args)
 {
+    LOG(Debug) << std::endl;    
     LOG(Info) << "command (hlen)" << std::endl;
+    
     // std::shared_ptr<Dict<std::string, std::string>> d = Server::getCurrDb()->findDict(dict);
     std::string dict = args[0];
     std::shared_ptr<Dict<std::string, std::string>> d = Server::getCurrDb()->findDict(dict);
@@ -99,6 +107,7 @@ bool hlenCommand(std::deque<std::string> &args)
 
 bool hclearCommand(std::deque<std::string> &args)
 {
+    LOG(Debug) << std::endl;    
     LOG(Info) << "command (hclear)" << std::endl;
 }
 

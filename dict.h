@@ -27,12 +27,12 @@ class DictEntry
   public:
 	DictEntry() : m_pNext(nullptr)
 	{
-		LOG(Info) << "class DictEntry construct" << std::endl;
+		LOG(Debug) << "class DictEntry construct" << std::endl;
 	}
 	~DictEntry()
 	{
 		m_pNext = nullptr;
-		LOG(Info) << "class DictEntry destory" << std::endl;
+		LOG(Debug) << "class DictEntry destory" << std::endl;
 	}
 };
 
@@ -82,12 +82,14 @@ class Dict
 	{
 		m_pTables[0] = new DictTable<K, V>;
 		m_pTables[1] = new DictTable<K, V>;
-		std::cout << "class Dict construct\n";
+
+		LOG(Debug) << "class Dict construct\n";
 	};
 
 	bool dictSet(K key, V value)
 	{
-		LOG(Info) << std::endl;
+		LOG(Debug) << std::endl;
+		
 		if (!m_nReHash)
 		{
 			return m_pTables[0]->insertPair(key, value);
@@ -99,6 +101,8 @@ class Dict
 	}
 	V dictGet(K key)
 	{
+		LOG(Debug) << std::endl;
+		
 		if (!m_nReHash)
 		{
 			return m_pTables[0]->findPair(key);
@@ -110,6 +114,8 @@ class Dict
 	}
 	int dictLen()
 	{
+		LOG(Debug) << std::endl;
+
 		if (!m_nReHash)
 			return m_pTables[0]->m_nUsed;
 		else
@@ -118,7 +124,7 @@ class Dict
 
 	~Dict()
 	{
-		std::cout << "class Dict destory\n";
+		LOG(Debug) << "class Dict destory\n";
 	}
 };
 
@@ -142,13 +148,15 @@ DictTable<K, V>::DictTable(size_t size)
 	m_pTable = new DictEntry<K, V> *[size];
 	for (int i = 0; i < size; i++)
 		m_pTable[i] = nullptr;
+
+	LOG(Debug) << "class DictTable construct\n";
 }
 
 template <typename K, typename V>
 unsigned int DictTable<K, V>::m_fGetIndex(const K &k)
 {
-	LOG(Info) << std::endl;
-	LOG(Info) << k << std::endl;
+	LOG(Debug) << std::endl;
+
 	unsigned int hash = hashFunction(k);
 	unsigned int index = hash % m_nSize;
 	return index;
@@ -157,7 +165,8 @@ unsigned int DictTable<K, V>::m_fGetIndex(const K &k)
 template <typename K, typename V>
 DictEntry<K, V> *DictTable<K, V>::m_fFindEntry(const K &k)
 {
-	LOG(Info) << std::endl;
+	LOG(Debug) << std::endl;
+
 	//if exists return a pointer,else return nullptr;
 	unsigned int index = m_fGetIndex(k);
 	if (m_pTable[index] == nullptr)
@@ -179,7 +188,7 @@ DictEntry<K, V> *DictTable<K, V>::m_fFindEntry(const K &k)
 template <typename K, typename V>
 DictEntry<K, V> *DictTable<K, V>::m_fGetEntry(const K &k)
 {
-	LOG(Info) << std::endl;
+	LOG(Debug) << std::endl;
 
 	DictEntry<K, V> *find = m_fFindEntry(k);
 	if (find == nullptr)
@@ -202,7 +211,7 @@ DictEntry<K, V> *DictTable<K, V>::m_fGetEntry(const K &k)
 template <typename K, typename V>
 bool DictTable<K, V>::insertPair(const K &k, const V &v)
 {
-	LOG(Info) << std::endl;
+	LOG(Debug) << std::endl;
 
 	DictEntry<K, V> *get = m_fGetEntry(k);
 	if (get != nullptr)
@@ -214,6 +223,8 @@ bool DictTable<K, V>::insertPair(const K &k, const V &v)
 template <typename K, typename V>
 V DictTable<K, V>::findPair(const K &k)
 {
+	LOG(Debug) << std::endl;
+
 	DictEntry<K, V> *find = m_fFindEntry(k);
 	if (find == nullptr)
 	{
@@ -227,12 +238,15 @@ V DictTable<K, V>::findPair(const K &k)
 template <typename K, typename V>
 V DictTable<K, V>::operator[](const K &k)
 {
+	LOG(Debug) << std::endl;
+
 	return findPair(k);
 }
 template <typename K, typename V>
 bool DictTable<K, V>::deletePair(const K &k)
 {
 	//delete
+	LOG(Debug) << std::endl;
 }
 
 template <typename K, typename V>
@@ -255,12 +269,13 @@ DictTable<K, V>::~DictTable()
 
 		m_pTable[i] = nullptr;
 	}
-	std::cout << "dalete " << tmp << " entry\n";
+	// std::cout << "dalete " << tmp << " entry\n";
 	delete m_pTable;
 	m_pTable = nullptr;
 	m_nSize = 0;
 	m_nSizeMask = 0;
 	m_nUsed = 0;
+	LOG(Debug) << "class DictTable construct\n";
 }
 
 #endif
