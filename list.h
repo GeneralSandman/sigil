@@ -33,7 +33,6 @@ public:
   void setValue(const T &v) { m_nValue = m_nValue; }
   ~ListNode()
   {
-    std::cout << "delete node:" << m_nValue << std::endl;
     LOG(Info) << "class ListNode destory\n";
   }
 };

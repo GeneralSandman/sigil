@@ -29,6 +29,7 @@ shared_of_dict Db::findDict(const std::string &dict)
             make_shared<Dict<std::string, std::string>>(dict);
         m_nDicts[dict] = newdict;
         m_pPrevDict = newdict;
+        LOG(Info) << "create new dict" << std::endl;
     }
     else
         m_pPrevDict = p->second;
@@ -240,6 +241,11 @@ bool showCurrDbCommand(std::deque<std::string> &args)
         return false;
     }
     Server::getServerInstace()->showCurrDb();
+}
+
+bool quitCommand(std::deque<std::string> &args)
+{
+    LOG(Info) << "command (quit)" << std::endl;
 }
 
 ///

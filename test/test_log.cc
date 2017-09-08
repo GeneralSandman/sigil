@@ -6,15 +6,23 @@ using namespace std;
 
 int main()
 {
-    initLogger("info.log", "warn.log", "error.log");
-
-    for (int i = 0; i < 4; i++)
+    initLogger("log/debug.log",
+               "log/info.log",
+               "log/warn.log",
+               "log/error.log",
+               "log/fatal.log",
+               Debug);
+    for (log_level l = Debug; l <= Fatal; l = log_level(l + 1))
     {
-        LOG(Info) << i << endl;
-        LOG(Warning) << i << endl;
-        LOG(Error) << i << endl;
+        setLogLevel(l);
 
-        sleep(1);
+        LOG(Debug) << endl;
+        LOG(Info) << endl;
+        LOG(Warning) << endl;
+        LOG(Error) << endl;
+        LOG(Fatal) << endl;
+
+        sleep(2);
     }
 
     delete Logger::getLoggerInstance();

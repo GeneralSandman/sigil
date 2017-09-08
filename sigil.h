@@ -15,6 +15,7 @@ bool createDbCommand(std::deque<std::string> &args);
 bool deleteDbCommand(std::deque<std::string> &args);
 bool selectCurrDbCommand(std::deque<std::string> &args);
 bool showCurrDbCommand(std::deque<std::string> &args);
+bool quitCommand(std::deque<std::string> &args);
 
 template <typename K, typename V>
 class Dict;
@@ -73,6 +74,9 @@ public:
   static bool regitCommand(const std::string &n, command c)
   {
     m_nCommand[n] = c;
+  }
+  bool quit(void){
+    //quit sigil
   }
   command findCommand(const std::string &n);
   ~Server();

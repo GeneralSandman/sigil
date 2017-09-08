@@ -29,6 +29,7 @@ int main()
     RegisterCommand("select", selectCurrDbCommand);
     RegisterCommand("db", showCurrDbCommand);
 
+    RegisterCommand("quit", quitCommand);
     //list
     RegisterCommand("lmem", lmemCommand);
     RegisterCommand("lpush", lpushCommand);
@@ -46,6 +47,8 @@ int main()
     RegisterCommand("hset", hsetCommand);
     RegisterCommand("hmset", hmsetCommand);
     RegisterCommand("hget", hgetCommand);
+    RegisterCommand("hlen", hlenCommand);
+    RegisterCommand("hclear", hclearCommand);
 
     welcome();
     Command com(server);

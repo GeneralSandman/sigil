@@ -34,6 +34,4 @@
 
 .vscode
 .idea/*
-./test/error.log
-./test/info.log
-./test/warn.log
+./test/log/*

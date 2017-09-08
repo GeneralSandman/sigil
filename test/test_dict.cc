@@ -1,4 +1,5 @@
 #include "../dict.h"
+#include "../log.h"
 #include <iostream>
 #include <string>
 
@@ -8,8 +9,8 @@ int main()
 {
     {
         string d = "db";
-        string key = "li";
-        string value = "1";
+        string key = "a";
+        string value = "a";
 
         Dict<string, string> newdict(d);
         newdict.dictSet(key, value);

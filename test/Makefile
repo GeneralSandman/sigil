@@ -1,5 +1,5 @@
-test_dict:test_dict.o dict.o
-	g++ -o test_dict test_dict.o dict.o
+test_dict:test_dict.o dict.o log.o sigil.o
+	g++ -o test_dict test_dict.o dict.o log.o sigil.o
 test_list:test_list.o list.o log.o
 	g++ -o test_list test_list.o list.o log.o
 test_server:test_server.o dict.o list.o sigil.o log.o
