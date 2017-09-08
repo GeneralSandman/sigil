@@ -66,6 +66,7 @@ Db::~Db()
 
 Server::Server()
 {
+    m_nRun = true;
     createDb("init");
     selectCurrDb("init");
 
@@ -246,6 +247,7 @@ bool showCurrDbCommand(std::deque<std::string> &args)
 bool quitCommand(std::deque<std::string> &args)
 {
     LOG(Info) << "command (quit)" << std::endl;
+    Server::getServerInstace()->stop();
 }
 
 ///

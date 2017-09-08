@@ -28,11 +28,11 @@ class Db
 private:
   std::string m_nName;
 
-  std::string m_nPrevDict;//store the prev mainpulated dict
+  std::string m_nPrevDict; //store the prev mainpulated dict
   shared_of_dict m_pPrevDict;
   std::map<std::string, shared_of_dict> m_nDicts;
 
-  std::string m_nPrevList;//store the prev mainpulated list
+  std::string m_nPrevList; //store the prev mainpulated list
   shared_of_list m_pPrevList;
   std::map<std::string, shared_of_list> m_nLists;
 
@@ -51,6 +51,7 @@ private:
   std::map<std::string, std::shared_ptr<Db>> m_nDbs;
   static std::shared_ptr<Db> m_nCurrDb;
   static std::map<std::string, command> m_nCommand;
+  bool m_nRun;
   Server();
 
 public:
@@ -75,8 +76,14 @@ public:
   {
     m_nCommand[n] = c;
   }
-  bool quit(void){
+  bool runing(void)
+  {
     //quit sigil
+    return m_nRun;
+  }
+  void stop(void)
+  {
+    m_nRun = false;
   }
   command findCommand(const std::string &n);
   ~Server();

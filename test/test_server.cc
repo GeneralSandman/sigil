@@ -18,7 +18,12 @@ void welcome()
 }
 int main()
 {
-    initLogger("info.log", "warn.log", "error.log");
+    initLogger("log/debug.log",
+               "log/info.log",
+               "log/warn.log",
+               "log/error.log",
+               "log/fatal.log",
+               Debug);
 
     Server *server = Server::getServerInstace();
 
@@ -52,13 +57,11 @@ int main()
 
     welcome();
     Command com(server);
-    while (1)
+    while (server->runing())
     {
         std::cout << "sigil> ";
         com.waitCommand();
     }
-
-    delete Logger::getLoggerInstance();
 
     return 0;
 }
