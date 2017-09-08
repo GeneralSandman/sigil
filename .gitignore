@@ -34,4 +34,4 @@
 
 .vscode
 .idea/*
-./test/log/*
+./test/log/*.log
