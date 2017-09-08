@@ -2,8 +2,8 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <memory>
 
-Logger *Logger::m_pLoggerInstance = nullptr;
 
 std::ofstream Logger::m_nNullStream(0);
 

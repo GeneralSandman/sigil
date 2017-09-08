@@ -21,8 +21,6 @@ void setLogLevel(log_level level);
 class Logger
 {
 private:
-  static Logger *m_pLoggerInstance;
-
   static std::ofstream m_nNullStream;
 
   static std::ofstream m_nDebugLogFile;
@@ -38,12 +36,14 @@ private:
   }
 
 public:
-  static Logger *getLoggerInstance()
+  static Logger &getLoggerInstance()
   {
-    // m_nLevel = level;
-    if (m_pLoggerInstance == nullptr)
-      m_pLoggerInstance = new Logger();
-    return m_pLoggerInstance;
+    // if (m_pLoggerInstance == nullptr)
+    //   m_pLoggerInstance = new Logger();
+    // return m_pLoggerInstance;
+
+    static Logger LoggerInstance;
+    return LoggerInstance;
   }
   std::ostream &getStream(log_level level);
   std::ostream &log(log_level level,
@@ -64,6 +64,6 @@ public:
 };
 
 #define LOG(level) \
-  Logger::getLoggerInstance()->log(level, __LINE__, __FUNCTION__)
+  Logger::getLoggerInstance().log(level, __LINE__, __FUNCTION__)
 
 #endif

@@ -117,4 +117,42 @@ hmget key field1 [field2]
 ```
 hlen key
 ```
+---
 
+## 日志使用方法（test/test_log.cc）
+```
+日志采用单例 (Meyers Singleton) 模式
+```
+
+### 1.日志的初始化
+五个日志等级：Debug,Info,Warning,Error,Fatal
+
+前五个参数指定日志文件，如果参数为"",则日志将在终端输出，最后一个参数为系统日志等级，默认等级为Info
+```
+void initLogger(const std::string &debug_log_filename,
+                const std::string &info_log_filename,
+                const std::string &warn_log_filename,
+                const std::string &error_log_filename,
+                const std::string &fatal_log_filename,
+                log_level level);
+```
+
+### 2.日志等级改变
+
+```
+void setLogLevel(log_level level);
+```
+
+### 3.打印日志方法
+```
+LOG(level)<<information;
+```
+level 为本条日志级别，information为日志信息
+
+### 4.程序结束时无需释放内存
+
+
+### 3.注意事项
+单条日志级别如果比系统日志等级小，则本条日志将被忽略。
+
+栗：如果当前系统日志等级为Info,则LOG(Debug)无效，其余均有效。
