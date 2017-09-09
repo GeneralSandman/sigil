@@ -49,6 +49,7 @@ class DictTable
 	bool insertPair(const K &, const V &);
 	V findPair(const K &);
 	bool deletePair(const K &);
+	bool clearAll();
 
 	V operator[](const K &);
 	~DictTable();
@@ -89,7 +90,7 @@ class Dict
 	bool dictSet(K key, V value)
 	{
 		LOG(Debug) << std::endl;
-		
+
 		if (!m_nReHash)
 		{
 			return m_pTables[0]->insertPair(key, value);
@@ -102,7 +103,7 @@ class Dict
 	V dictGet(K key)
 	{
 		LOG(Debug) << std::endl;
-		
+
 		if (!m_nReHash)
 		{
 			return m_pTables[0]->findPair(key);
@@ -122,8 +123,18 @@ class Dict
 			return m_pTables[0]->m_nUsed + m_pTables[1]->m_nUsed;
 	}
 
+	bool dictClear()
+	{
+		LOG(Debug) << std::endl;
+
+		m_pTables[0]->clearAll();
+		m_pTables[1]->clearAll();
+	}
+
 	~Dict()
 	{
+		delete m_pTables[0];
+		delete m_pTables[1];		
 		LOG(Debug) << "class Dict destory\n";
 	}
 };
@@ -250,7 +261,7 @@ bool DictTable<K, V>::deletePair(const K &k)
 }
 
 template <typename K, typename V>
-DictTable<K, V>::~DictTable()
+bool DictTable<K, V>::clearAll()
 {
 	int tmp = 0;
 	for (int i = 0; i < m_nSize; i++)
@@ -269,13 +280,22 @@ DictTable<K, V>::~DictTable()
 
 		m_pTable[i] = nullptr;
 	}
+
+	if (m_nSize == tmp)
+		return true;
+}
+
+template <typename K, typename V>
+DictTable<K, V>::~DictTable()
+{
+	clearAll();
 	// std::cout << "dalete " << tmp << " entry\n";
-	delete m_pTable;
+	delete[] m_pTable;
 	m_pTable = nullptr;
 	m_nSize = 0;
 	m_nSizeMask = 0;
 	m_nUsed = 0;
-	LOG(Debug) << "class DictTable construct\n";
+	LOG(Debug) << "class DictTable destory\n";
 }
 
 #endif

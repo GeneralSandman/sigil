@@ -34,7 +34,6 @@ int main()
             RegisterCommand("deletedb", deleteDbCommand);
             RegisterCommand("select", selectCurrDbCommand);
             RegisterCommand("db", showCurrDbCommand);
-
             RegisterCommand("quit", quitCommand);
             //list
             RegisterCommand("lmem", lmemCommand);

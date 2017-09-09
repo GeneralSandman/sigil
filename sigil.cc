@@ -9,7 +9,6 @@ std::map<std::string, command> Server::m_nCommand;
 Db::Db(const std::string &name) : m_nName(name)
 {
     LOG(Debug) << "class Db construct" << std::endl;
-    
 }
 
 std::string &Db::getName()
@@ -60,6 +59,16 @@ shared_of_list Db::findList(const std::string &list)
 
 Db::~Db()
 {
+    for (auto t : m_nDicts)
+    {
+        t.second = nullptr;
+    }
+
+    for (auto t : m_nLists)
+    {
+        t.second = nullptr;
+    }
+
     LOG(Debug) << "class Db destory" << std::endl;
 }
 
@@ -152,6 +161,10 @@ Server::~Server()
     //     delete m_pServerInstance;
     //     m_pServerInstance = nullptr;
     // }
+    for (auto t : m_nDbs)
+    {
+        t.second = nullptr;
+    }
     LOG(Debug) << "class Server destory\n";
 }
 //////

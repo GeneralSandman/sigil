@@ -117,6 +117,11 @@ hmget key field1 [field2]
 ```
 hlen key
 ```
+
+- 清空哈希表
+```
+hclear key
+```
 ---
 
 ## 日志使用方法（test/test_log.cc）
