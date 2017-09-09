@@ -122,6 +122,9 @@ hlen key
 ```
 hclear key
 ```
+
+># 4.数据库的持久化
+
 ---
 
 ## 日志使用方法（test/test_log.cc）
