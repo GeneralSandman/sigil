@@ -18,49 +18,55 @@ void welcome()
 }
 int main()
 {
-    initLogger("log/debug.log",
-               "log/info.log",
-               "log/warn.log",
-               "log/error.log",
-               "log/fatal.log",
-               Debug);
-
-    Server *server = Server::getServerInstace();
-
-    //basic
-    RegisterCommand("dbs", listDbsCommand);
-    RegisterCommand("createdb", createDbCommand);
-    RegisterCommand("deletedb", deleteDbCommand);
-    RegisterCommand("select", selectCurrDbCommand);
-    RegisterCommand("db", showCurrDbCommand);
-
-    RegisterCommand("quit", quitCommand);
-    //list
-    RegisterCommand("lmem", lmemCommand);
-    RegisterCommand("lpush", lpushCommand);
-    RegisterCommand("rpush", rpushCommand);
-    RegisterCommand("lpop", lpopCommand);
-    RegisterCommand("rpop", rpopCommand);
-    RegisterCommand("llen", llenCommand);
-    RegisterCommand("lindex", lindexCommand);
-    RegisterCommand("linsert", linsertCommand);
-    RegisterCommand("lrange", lrangeCommand);
-    RegisterCommand("lrem", lremCommand);
-    RegisterCommand("lclear", lclearCommand);
-
-    //hash
-    RegisterCommand("hset", hsetCommand);
-    RegisterCommand("hmset", hmsetCommand);
-    RegisterCommand("hget", hgetCommand);
-    RegisterCommand("hlen", hlenCommand);
-    RegisterCommand("hclear", hclearCommand);
-
-    welcome();
-    Command com(server);
-    while (server->runing())
     {
-        std::cout << "sigil> ";
-        com.waitCommand();
+        initLogger("log/debug.log",
+                   "log/info.log",
+                   "log/warn.log",
+                   "log/error.log",
+                   "log/fatal.log",
+                   Debug);
+        {
+            Server *server = Server::getServerInstace();
+
+            //basic
+            RegisterCommand("dbs", listDbsCommand);
+            RegisterCommand("createdb", createDbCommand);
+            RegisterCommand("deletedb", deleteDbCommand);
+            RegisterCommand("select", selectCurrDbCommand);
+            RegisterCommand("db", showCurrDbCommand);
+
+            RegisterCommand("quit", quitCommand);
+            //list
+            RegisterCommand("lmem", lmemCommand);
+            RegisterCommand("lpush", lpushCommand);
+            RegisterCommand("rpush", rpushCommand);
+            RegisterCommand("lpop", lpopCommand);
+            RegisterCommand("rpop", rpopCommand);
+            RegisterCommand("llen", llenCommand);
+            RegisterCommand("lindex", lindexCommand);
+            RegisterCommand("linsert", linsertCommand);
+            RegisterCommand("lrange", lrangeCommand);
+            RegisterCommand("lrem", lremCommand);
+            RegisterCommand("lclear", lclearCommand);
+
+            //hash
+            RegisterCommand("hset", hsetCommand);
+            RegisterCommand("hmset", hmsetCommand);
+            RegisterCommand("hget", hgetCommand);
+            RegisterCommand("hlen", hlenCommand);
+            RegisterCommand("hclear", hclearCommand);
+
+            welcome();
+            Command com(server);
+            while (server->runing())
+            {
+                std::cout << "sigil> ";
+                com.waitCommand();
+            }
+
+            delete server;
+        }
+
     }
 
     return 0;

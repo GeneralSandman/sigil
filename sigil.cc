@@ -2,13 +2,14 @@
 #include "log.h"
 #include <iostream>
 
-Server *Server::serverInstance = nullptr;
+Server *Server::m_pServerInstance = nullptr;
 std::shared_ptr<Db> Server::m_nCurrDb = nullptr;
 std::map<std::string, command> Server::m_nCommand;
 
 Db::Db(const std::string &name) : m_nName(name)
 {
-    LOG(Info) << "create db(" << name << ")" << std::endl;
+    LOG(Debug) << "class Db construct" << std::endl;
+    
 }
 
 std::string &Db::getName()
@@ -59,7 +60,7 @@ shared_of_list Db::findList(const std::string &list)
 
 Db::~Db()
 {
-    LOG(Info) << "delete db(" << m_nName << ")" << std::endl;
+    LOG(Debug) << "class Db destory" << std::endl;
 }
 
 ////server api
@@ -146,6 +147,11 @@ command Server::findCommand(const std::string &n)
 }
 Server::~Server()
 {
+    // if (m_pServerInstance)
+    // {
+    //     delete m_pServerInstance;
+    //     m_pServerInstance = nullptr;
+    // }
     LOG(Debug) << "class Server destory\n";
 }
 //////

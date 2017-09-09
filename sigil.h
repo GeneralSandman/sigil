@@ -47,7 +47,7 @@ public:
 class Server
 {
 private:
-  static Server *serverInstance;
+  static Server *m_pServerInstance;
   std::map<std::string, std::shared_ptr<Db>> m_nDbs;
   static std::shared_ptr<Db> m_nCurrDb;
   static std::map<std::string, command> m_nCommand;
@@ -62,10 +62,10 @@ public:
   void showCurrDb(void);
   static Server *getServerInstace()
   {
-    if (serverInstance == nullptr)
-      serverInstance = new Server();
+    if (m_pServerInstance == nullptr)
+      m_pServerInstance = new Server();
 
-    return serverInstance;
+    return m_pServerInstance;
   }
   void setCurrDb(const std::string &db);
   static std::shared_ptr<Db> getCurrDb()

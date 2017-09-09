@@ -104,7 +104,6 @@ std::ostream &Logger::log(log_level level,
     strftime(tmpBuf, 156, "%Y%m%d%H%M%S", localtime(&t)); //format date and time.
 
     std::string level_string = "";
-    std::cout << level << std::endl;
     switch (level)
     {
     case Debug:
@@ -123,7 +122,6 @@ std::ostream &Logger::log(log_level level,
         level_string = "Fatal";
         break;
     }
-    std::cout << level_string << std::endl;
 
     //if the current log level is Info,so the LOG(Debug) do nothing
     return getStream(level) << "[" << tmpBuf << "]"
@@ -150,5 +148,5 @@ Logger::~Logger()
         m_nErrLogFile.close();
         m_nFatalLogFile.close();
     }
-    std::cout << "class Logger destory\n";
+    // std::cout << "class Logger destory\n";
 }
