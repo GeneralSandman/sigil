@@ -6,8 +6,11 @@ Server *Server::m_pServerInstance = nullptr;
 std::shared_ptr<Db> Server::m_nCurrDb = nullptr;
 std::map<std::string, command> Server::m_nCommand;
 
-Db::Db(const std::string &name) : m_nName(name)
+Db::Db(const std::string &name)
+    : m_nName(name)
 {
+    int n = Server::getServerInstace()->getDbsNum();
+    m_nNumber = 1;
     LOG(Debug) << "class Db construct" << std::endl;
 }
 
@@ -15,6 +18,12 @@ std::string &Db::getName()
 {
     return m_nName;
 }
+
+int Db::getNumber()
+{
+    return m_nNumber;
+}
+
 shared_of_dict Db::findDict(const std::string &dict)
 {
     if (m_nPrevDict == dict)
@@ -76,6 +85,7 @@ Db::~Db()
 
 Server::Server()
 {
+    m_nDbsNum = 0;
     m_nRun = true;
     createDb("init");
     selectCurrDb("init");
@@ -87,7 +97,9 @@ void Server::listDbs(void)
 {
     std::cout << m_nDbs.size() << ":" << std::endl;
     for (auto t : m_nDbs)
+        // std::cout << t.second->getNumber() << ":" << t.first << endl;
         std::cout << t.first << endl;
+
     LOG(Info) << "list dbs" << std::endl;
 }
 
@@ -95,6 +107,7 @@ bool Server::createDb(const std::string &db)
 {
     std::shared_ptr<Db> newdb = make_shared<Db>(db);
     m_nDbs[db] = newdb;
+    increDbsNum();
     return true;
 }
 
