@@ -30,7 +30,8 @@ deletedb <db>
 deletedb <db1> <db2>
 ```
 
-# >2.列表(list)
+> # 2.列表(list)
+
 > 列表按照插入顺序排列
 
 |命令|操作|

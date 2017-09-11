@@ -2,6 +2,7 @@
 #include "log.h"
 #include <iostream>
 
+int Db::m_nDbsNum = 0;
 Server *Server::m_pServerInstance = nullptr;
 std::shared_ptr<Db> Server::m_nCurrDb = nullptr;
 std::map<std::string, command> Server::m_nCommand;
@@ -9,8 +10,8 @@ std::map<std::string, command> Server::m_nCommand;
 Db::Db(const std::string &name)
     : m_nName(name)
 {
-    int n = Server::getServerInstace()->getDbsNum();
-    m_nNumber = 1;
+    m_nNumber = m_nDbsNum;
+    m_nDbsNum++;
     LOG(Debug) << "class Db construct" << std::endl;
 }
 
@@ -85,7 +86,6 @@ Db::~Db()
 
 Server::Server()
 {
-    m_nDbsNum = 0;
     m_nRun = true;
     createDb("init");
     selectCurrDb("init");
@@ -95,10 +95,10 @@ Server::Server()
 
 void Server::listDbs(void)
 {
-    std::cout << m_nDbs.size() << ":" << std::endl;
+    std::cout << Db::m_nDbsNum << ":" << std::endl;
     for (auto t : m_nDbs)
-        // std::cout << t.second->getNumber() << ":" << t.first << endl;
-        std::cout << t.first << endl;
+        std::cout << t.second->getNumber() << ":" << t.first << endl;
+    // std::cout << t.first << endl;
 
     LOG(Info) << "list dbs" << std::endl;
 }
@@ -107,7 +107,6 @@ bool Server::createDb(const std::string &db)
 {
     std::shared_ptr<Db> newdb = make_shared<Db>(db);
     m_nDbs[db] = newdb;
-    increDbsNum();
     return true;
 }
 

@@ -26,6 +26,7 @@ typedef std::shared_ptr<List<std::string>> shared_of_list;
 class Db
 {
 private:
+  static int m_nDbsNum;
   int m_nNumber;
   std::string m_nName;
 
@@ -44,13 +45,14 @@ public:
   shared_of_dict findDict(const std::string &dict);
   shared_of_list findList(const std::string &list);
   ~Db();
+
+  friend class Server;
 };
 
 class Server
 {
 private:
   static Server *m_pServerInstance;
-  int m_nDbsNum;
   std::map<std::string, std::shared_ptr<Db>> m_nDbs;
   static std::shared_ptr<Db> m_nCurrDb;
   static std::map<std::string, command> m_nCommand;
@@ -64,8 +66,7 @@ public:
   bool selectCurrDb(const std::string &db);
   void showCurrDb(void);
 
-  int getDbsNum() { return m_nDbsNum; }
-  bool increDbsNum() { m_nDbsNum++; }
+  int getDbsNum() { return Db::m_nDbsNum; }
   static Server *getServerInstace()
   {
     LOG(Debug) << std::endl;
