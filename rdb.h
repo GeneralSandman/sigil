@@ -17,6 +17,7 @@ class Persist
     Persist(const std::string &);
     bool save();
     bool bgsave();
+    bool load();
     ~Persist();
 };
 #endif

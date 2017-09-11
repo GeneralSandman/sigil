@@ -32,7 +32,7 @@ private:
   static log_level m_nLevel;
   Logger()
   {
-    // std::cout << "Logger construct\n";
+    std::cout << "Logger construct\n";
   }
 
 public:

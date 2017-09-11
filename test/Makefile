@@ -14,6 +14,8 @@ test_log:test_log.o log.o
 	$(gg) test_log test_log.o log.o
 test_rdb:test_rdb.o rdb.o
 	$(gg) test_rdb test_rdb.o rdb.o
+test_virtual:test_virtual.o log.o
+	$(gg) test_virtual test_virtual.o log.o
 
 
 test_binaryfile.o:test_binaryfile.cc
@@ -28,6 +30,8 @@ test_log.o:test_log.cc
 	$(goo) test_log.o test_log.cc
 test_rdb.o:test_rdb.cc
 	$(goo) test_rdb.o test_rdb.cc
+test_virtual.o:test_virtual.cc
+	$(goo) test_virtual.o test_virtual.cc
 
 dict.o:../dict.cc
 	$(goo) dict.o ../dict.cc

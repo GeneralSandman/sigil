@@ -148,5 +148,5 @@ Logger::~Logger()
         m_nErrLogFile.close();
         m_nFatalLogFile.close();
     }
-    // std::cout << "class Logger destory\n";
+    std::cout << "class Logger destory\n";
 }

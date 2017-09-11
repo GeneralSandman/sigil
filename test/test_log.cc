@@ -26,6 +26,7 @@ int main()
             sleep(2);
         }
     }
+    std::cout << "main block\n";
 
     return 0;
 }
