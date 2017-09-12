@@ -1,5 +1,6 @@
 #include "io.h"
 #include "log.h"
+#include "api.h"
 #include <stdio.h>
 
 inline size_t IO::m_fRead(void *, size_t)
@@ -22,45 +23,6 @@ IO::IO(size_t max)
     LOG(Debug) << "class IO constructor" << std::endl;
 }
 
-inline size_t IO::ioRead(void *buf, size_t len)
-{
-    while (len)
-    {
-        size_t bytes_to_read = 0;
-        if (m_nMaxProcessBytes && len >= m_nMaxProcessBytes)
-            bytes_to_read = m_nMaxProcessBytes;
-        else
-            bytes_to_read = len;
-        m_fRead(buf, bytes_to_read);
-
-        buf = (char *)buf + bytes_to_read;
-        len -= bytes_to_read;
-        m_nProcessedBytes += bytes_to_read;
-    }
-}
-
-inline size_t IO::ioWrite(const void *buf, size_t len)
-{
-    while (len)
-    {
-        size_t bytes_to_write = 0;
-        if (m_nMaxProcessBytes && len >= m_nMaxProcessBytes)
-            bytes_to_write = m_nMaxProcessBytes;
-        else
-            bytes_to_write = len;
-
-        m_fWrite(buf, bytes_to_write);
-        buf = (char *)buf + bytes_to_write;
-        len -= bytes_to_write;
-        m_nProcessedBytes += bytes_to_write;
-    }
-}
-
-inline int IO::ioFlush()
-{
-    m_fFlush();
-}
-
 IO::~IO()
 {
     LOG(Debug) << "class IO destructor" << std::endl;
@@ -74,16 +36,36 @@ inline size_t FileIO::m_fRead(void *buf, size_t len)
 inline size_t FileIO::m_fWrite(const void *buf, size_t len)
 {
     LOG(Debug) << "FileIO::m_fWrite" << std::endl;
-    return fwrite(buf, len, 1, m_pFp);
+    size_t res = 0;
+    //res is 1 or 0
+    res = fwrite(buf, len, 1, m_pFp);
+    m_nBuffered += len;
+
+    if (m_nSyncNum &&
+        m_nBuffered >= m_nSyncNum)
+    {
+        fflush(m_pFp);
+        fsync(fileno(m_pFp));
+        m_nBuffered = 0;
+    }
+
+    return res;
 }
 inline int FileIO::m_fFlush()
 {
     LOG(Debug) << "FileIO::m_fFlush" << std::endl;
+    int res = fflush(m_pFp);
+    fsync(fileno(m_pFp));
+    if (res == 0)
+        //success
+        return 1;
+    else
+        return 0;
 }
 
-FileIO::FileIO(size_t max)
+FileIO::FileIO(size_t max, FILE *f)
     : IO(max),
-      m_pFp(nullptr),
+      m_pFp(f),
       m_nBuffered(0),
       m_nSyncNum(1000)
 {
@@ -95,4 +77,4 @@ FileIO::~FileIO()
     LOG(Debug) << "class FileIO destructor" << std::endl;
 }
 
-static const FileIO FileIOInstance();
+// static const FileIO FileIOInstance();

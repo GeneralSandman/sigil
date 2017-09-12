@@ -1,37 +1,39 @@
 gg = g++ -o
 goo = g++ -std=c++11 -c -o
 
-test_binaryfile:test_binaryfile.o
-	$(gg) test_binaryfile test_binaryfile.o
+binaryfile_test:binaryfile_test.o
+	$(gg) binaryfile_test binaryfile_test.o
+dict_test:dict_test.o dict.o log.o sigil.o
+	$(gg) dict_test dict_test.o dict.o log.o sigil.o
+list_test:list_test.o list.o log.o
+	$(gg) list_test list_test.o list.o log.o
+server_test:server_test.o dict.o list.o sigil.o log.o rdb.o
+	$(gg) server_test server_test.o dict.o list.o sigil.o log.o rdb.o
+log_test:log_test.o log.o
+	$(gg) log_test log_test.o log.o
+rdb_test:rdb_test.o rdb.o
+	$(gg) rdb_test rdb_test.o rdb.o
+virtual_test:virtual_test.o log.o
+	$(gg) virtual_test virtual_test.o log.o
+io_test:io_test.o io.o log.o api.o
+	$(gg) io_test io_test.o io.o log.o api.o
 
-test_dict:test_dict.o dict.o log.o sigil.o
-	$(gg) test_dict test_dict.o dict.o log.o sigil.o
-test_list:test_list.o list.o log.o
-	$(gg) test_list test_list.o list.o log.o
-test_server:test_server.o dict.o list.o sigil.o log.o rdb.o
-	$(gg) test_server test_server.o dict.o list.o sigil.o log.o rdb.o
-test_log:test_log.o log.o
-	$(gg) test_log test_log.o log.o
-test_rdb:test_rdb.o rdb.o
-	$(gg) test_rdb test_rdb.o rdb.o
-test_virtual:test_virtual.o log.o
-	$(gg) test_virtual test_virtual.o log.o
-
-
-test_binaryfile.o:test_binaryfile.cc
-	$(goo) test_binaryfile.o test_binaryfile.cc
-test_dict.o:test_dict.cc
-	$(goo) test_dict.o test_dict.cc
-test_list.o:test_list.cc
-	$(goo) test_list.o test_list.cc
-test_server.o:test_server.cc
-	$(goo) test_server.o test_server.cc
-test_log.o:test_log.cc
-	$(goo) test_log.o test_log.cc
-test_rdb.o:test_rdb.cc
-	$(goo) test_rdb.o test_rdb.cc
-test_virtual.o:test_virtual.cc
-	$(goo) test_virtual.o test_virtual.cc
+binaryfile_test.o:binaryfile_test.cc
+	$(goo) binaryfile_test.o binaryfile_test.cc
+dict_test.o:dict_test.cc
+	$(goo) dict_test.o dict_test.cc
+list_test.o:list_test.cc
+	$(goo) list_test.o list_test.cc
+server_test.o:server_test.cc
+	$(goo) server_test.o server_test.cc
+log_test.o:log_test.cc
+	$(goo) log_test.o log_test.cc
+rdb_test.o:rdb_test.cc
+	$(goo) rdb_test.o rdb_test.cc
+virtual_test.o:virtual_test.cc
+	$(goo) virtual_test.o virtual_test.cc
+io_test.o:io_test.cc
+	$(goo) io_test.o io_test.cc
 
 dict.o:../dict.cc
 	$(goo) dict.o ../dict.cc
@@ -43,6 +45,10 @@ log.o:../log.cc
 	$(goo) log.o ../log.cc
 rdb.o:../rdb.cc
 	$(goo) rdb.o ../rdb.cc
+io.o:../io.cc
+	$(goo) io.o ../io.cc
+api.o:../api.cc
+	$(goo) api.o ../api.cc
 
 .PHONY: clean
 clean:
