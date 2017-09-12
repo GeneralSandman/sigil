@@ -84,4 +84,9 @@ public:
   ~FileIO();
 };
 
+int saveInt(int);
+int saveOpenCode(int);
+int saveString(const std::string &);
+int saveKeyValue(const std::string &, const std::string &);
+
 #endif
