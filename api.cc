@@ -62,6 +62,11 @@ std::string cstr2string(const char *str)
     return result;
 }
 
+void string2cstr(const std::string &s, char *str, int len)
+{
+    strncpy(str, s.c_str(), len);
+}
+
 void splitString(const std::string &s, const std::string &p,
                  std::vector<std::string> &result)
 {

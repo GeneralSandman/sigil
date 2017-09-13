@@ -14,6 +14,7 @@ void handle_error_s(const std::string &msg);
 void setnonblocking(int sock);
 
 std::string cstr2string(const char *str);
+void string2cstr(const std::string &s, char *str, int len);
 void splitString(const std::string &, const std::string &, std::vector<std::string> &);
 std::map<char, std::string> getOption(int argc, char *argv[]);
 
@@ -38,14 +39,13 @@ in_addr_t Inet_addr(const std::string &host);
 std::string Inet_ntop(int af, const void *src,
                       char *dst, socklen_t size);
 
-
 int setnoblocking(int fd);
 
 void epolladdfd(int epfd, int fd);
-void epollremovefd(int epfd,int fd);
+void epollremovefd(int epfd, int fd);
 
 typedef void (*sighandler_t)(int);
-void add_signal(int sign,sighandler_t handler);
+void add_signal(int sign, sighandler_t handler);
 void remove_signal(int sign);
 
 #endif

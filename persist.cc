@@ -17,6 +17,7 @@ int Persist::m_fSaveCode(int code)
 
 int Persist::m_fSaveString(const std::string &s)
 {
+    m_fSaveInt(s.size());
     m_pFileIO->ioWrite(s.c_str(), s.size());
 }
 
@@ -29,7 +30,7 @@ int Persist::m_fSaveDb()
     //DB_CODE_SELECTDB+db_number+key_value
     int code = DB_CODE_SELECTDB;
     std::string db_name = "init";
-    int db_number = 123;
+    int db_number = 0;
 
     m_fSaveCode(code);
     m_fSaveString(db_name);
@@ -53,10 +54,13 @@ int Persist::m_fLoadCode(int &i)
 int Persist::m_fLoadString(std::string &s)
 {
     //we have to know the s.size()
-    for (int i = 0; i < s.size(); i++)
-    {
-        m_pFileIO->ioRead(&s[i], 1);
-    }
+    int len = 0;
+    m_fLoadInt(len);
+    char *tmp = new char[len];
+    m_pFileIO->ioRead(tmp, len);
+    for (int i = 0; i < len; i++)
+        s += tmp[i];
+    delete[] tmp;
 }
 
 int Persist::m_fLoadKeyValue(std::string &, std::string &) {}
@@ -94,6 +98,7 @@ bool Persist::save()
     int eof = DB_CODE_EOF;
 
     m_fSaveString(head);
+    m_fSaveInt(1); //db nums
     m_fSaveDb();
     m_fSaveCode(eof);
 

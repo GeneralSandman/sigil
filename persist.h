@@ -3,8 +3,8 @@
 #include <string>
 #include "io.h"
 
-#define DB_CODE_LIST
-#define DB_CODE_DICT
+#define DB_CODE_LIST 200
+#define DB_CODE_DICT 210
 #define DB_CODE_SELECTDB 254
 #define DB_CODE_EOF 255
 
