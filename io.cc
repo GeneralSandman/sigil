@@ -63,9 +63,10 @@ inline int FileIO::m_fFlush()
         return 0;
 }
 
-FileIO::FileIO(size_t max, FILE *f)
+FileIO::FileIO(size_t max, const std::string &f)
     : IO(max),
-      m_pFp(f),
+      m_nFileName(f),
+      m_pFp(fopen(f.c_str(), "wb+")),
       m_nBuffered(0),
       m_nSyncNum(1000)
 {
@@ -75,6 +76,7 @@ FileIO::FileIO(size_t max, FILE *f)
 FileIO::~FileIO()
 {
     LOG(Debug) << "class FileIO destructor" << std::endl;
+    fclose(m_pFp);
 }
 
 // static const FileIO FileIOInstance();

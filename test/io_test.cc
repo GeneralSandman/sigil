@@ -4,28 +4,39 @@
 #include <cstring>
 #include <fstream>
 using namespace std;
+#define COde 255
 
+int loadString(std::string &a)
+{
+}
 int main()
 {
-    FILE *f = fopen("./dbfile/sigil.db", "wb+");
-    FileIO fileio(100, f);
+    FileIO fileio(100, "./dbfile/sigil.db");
 
-    char s[] = "redis";
+    string s = "redis";
     int a = 123;
-    fileio.ioWrite(s, strlen(s));
-    fileio.ioWrite(&a, sizeof(a));
-    fileio.ioFlush();
+    int code = COde;
 
+    fileio.ioWrite(s.c_str(), s.size());
+    fileio.ioWrite(&a, sizeof(a));
+    fileio.ioWrite(&code, sizeof(code));
+
+    fileio.ioFlush();
     fileio.reset2Head();
 
-    char ss[6];
+    string ss;
+    ss.resize(5);
     int aa;
-    fileio.ioRead(ss, 5);
-    ss[5] = '\0';
+    int code2;
+    for (int i = 0; i < ss.size(); i++)
+    {
+        fileio.ioRead(&ss[i], 1);
+    }
     fileio.ioRead(&aa, sizeof(aa));
+    fileio.ioRead(&code2, sizeof(code2));
 
     cout << ss << endl
-         << aa << endl;
+         << aa << endl
+         << code2 << endl;
 
-    fclose(f);
 }

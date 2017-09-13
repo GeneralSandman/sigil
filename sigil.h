@@ -57,6 +57,7 @@ private:
   static std::shared_ptr<Db> m_nCurrDb;
   static std::map<std::string, command> m_nCommand;
   bool m_nRun;
+  std::string m_nPersistFile;
   Server();
 
 public:
@@ -94,6 +95,9 @@ public:
     m_nRun = false;
   }
   command findCommand(const std::string &n);
+  bool save();
+  bool bgsave();
+  bool load();
   ~Server();
 };
 

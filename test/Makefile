@@ -11,12 +11,12 @@ server_test:server_test.o dict.o list.o sigil.o log.o rdb.o
 	$(gg) server_test server_test.o dict.o list.o sigil.o log.o rdb.o
 log_test:log_test.o log.o
 	$(gg) log_test log_test.o log.o
-rdb_test:rdb_test.o rdb.o
-	$(gg) rdb_test rdb_test.o rdb.o
 virtual_test:virtual_test.o log.o
 	$(gg) virtual_test virtual_test.o log.o
 io_test:io_test.o io.o log.o api.o
 	$(gg) io_test io_test.o io.o log.o api.o
+persist_test:persist_test.o persist.o io.o log.o api.o
+	$(gg) persist_test persist_test.o persist.o io.o log.o api.o
 
 binaryfile_test.o:binaryfile_test.cc
 	$(goo) binaryfile_test.o binaryfile_test.cc
@@ -34,6 +34,8 @@ virtual_test.o:virtual_test.cc
 	$(goo) virtual_test.o virtual_test.cc
 io_test.o:io_test.cc
 	$(goo) io_test.o io_test.cc
+persist_test.o:persist_test.cc
+	$(goo) persist_test.o persist_test.cc
 
 dict.o:../dict.cc
 	$(goo) dict.o ../dict.cc
@@ -43,18 +45,16 @@ sigil.o:../sigil.cc
 	$(goo) sigil.o ../sigil.cc
 log.o:../log.cc
 	$(goo) log.o ../log.cc
-rdb.o:../rdb.cc
-	$(goo) rdb.o ../rdb.cc
+persist.o:../persist.cc
+	$(goo) persist.o ../persist.cc
 io.o:../io.cc
 	$(goo) io.o ../io.cc
 api.o:../api.cc
 	$(goo) api.o ../api.cc
 
-.PHONY: clean
 clean:
 	rm *.o
 
-.PHONY: cleanall
 cleanall:
 	find . -maxdepth 1 -type f -perm /111 -exec rm {} \;
 	rm *.o

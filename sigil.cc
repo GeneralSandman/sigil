@@ -166,6 +166,11 @@ command Server::findCommand(const std::string &n)
     }
     return p->second;
 }
+
+bool Server::save() {}
+bool Server::bgsave() {}
+bool Server::load() {}
+
 Server::~Server()
 {
     // if (m_pServerInstance)
@@ -279,6 +284,7 @@ bool quitCommand(std::deque<std::string> &args)
 {
     LOG(Info) << "command (quit)" << std::endl;
     Server::getServerInstace()->stop();
+    Server::getServerInstace()->save();
 }
 
 ///

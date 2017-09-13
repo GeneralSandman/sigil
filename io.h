@@ -67,6 +67,7 @@ public:
 class FileIO : public IO
 {
 protected:
+  std::string m_nFileName;
   FILE *m_pFp;
   size_t m_nBuffered;
   long m_nSyncNum;
@@ -76,17 +77,12 @@ protected:
   virtual int m_fFlush();
 
 public:
-  FileIO(size_t max, FILE *);
+  FileIO(size_t max, const std::string &);
   void reset2Head()
   {
     rewind(m_pFp);
   }
   ~FileIO();
 };
-
-int saveInt(int);
-int saveOpenCode(int);
-int saveString(const std::string &);
-int saveKeyValue(const std::string &, const std::string &);
 
 #endif
