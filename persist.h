@@ -32,9 +32,9 @@ private:
   int m_fLoadCode(int &);
   int m_fLoadString(std::string &);
   int m_fLoadKeyValue(std::string &, std::string &);
-  int m_fLoadDb(std::shared_ptr<Db>);
-  int m_fLoadList(std::shared_ptr<List<std::string>>);
-  int m_fLoadDict(std::shared_ptr<Dict<std::string, std::string>>);
+  int m_fLoadDb();
+  int m_fLoadList(std::shared_ptr<Db> db);
+  int m_fLoadDict();
 
 public:
   Persist(const std::string &);

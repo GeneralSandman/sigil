@@ -5,8 +5,8 @@ binaryfile_test:binaryfile_test.o
 	$(link) binaryfile_test binaryfile_test.o
 dict_test:dict_test.o dict.o log.o sigil.o
 	$(link) dict_test dict_test.o dict.o log.o sigil.o
-list_test:list_test.o list.o log.o
-	$(link) list_test list_test.o list.o log.o
+list_test:list_test.o list.o log.o sigil.o persist.o io.o
+	$(link) list_test list_test.o list.o log.o sigil.o persist.o io.o
 server_test:server_test.o dict.o list.o sigil.o log.o persist.o io.o
 	$(link) server_test server_test.o dict.o list.o sigil.o log.o persist.o io.o
 log_test:log_test.o log.o

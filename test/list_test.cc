@@ -9,25 +9,20 @@ int main()
 {
 
     {
-        List<string> l;
+        List<string> l("test");
+
         for (int i = 0; i < 8; i++)
         {
             l.add_head("a");
         }
 
-        for (int i = 0; i < 8; i++)
-            cout << l.pop_tail();
-    }
-
-    {
-        List<string> l;
-        for (int i = 0; i < 8; i++)
+        ListIter<string> iter(&l, AL_START_HEAD);        
+        ListNode<string> *t = nullptr;
+        while (t = iter.getListNext())
         {
-            l.add_head("a");
+            std::cout << t->m_nValue << std::endl;
         }
-
-        for (int i = 0; i < 8; i++)
-            cout << l.pop_head();
     }
+
     return 0;
 }

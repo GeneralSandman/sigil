@@ -58,6 +58,7 @@ public:
 
 public:
   List(const std::string &);
+  std::string getName() { return m_nName; }
   size_t getLen() { return m_nLen; }
   bool insert(T, T, int flag = 0);
   bool dele(T);
@@ -70,7 +71,6 @@ public:
   List dupLict();
   ~List();
 };
-
 
 //The function of ListIter is traversal all
 //the ListNode of List,in order to persist
@@ -90,10 +90,10 @@ public:
   ListNode<T> *getListNext();
   ~ListIter()
   {
-    m_pList = m_pNext = nullptr;
+    m_pList = nullptr;
+    m_pNext = nullptr;
   }
 };
-
 
 //---List-api--------//
 template <typename T>

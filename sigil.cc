@@ -93,7 +93,7 @@ Server::Server()
     createDb("init");
     selectCurrDb("init");
 
-    // load();
+    m_pPersist->load();
     LOG(Debug) << "class Server construct\n";
 }
 

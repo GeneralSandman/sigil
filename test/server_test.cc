@@ -26,9 +26,7 @@ int main()
                    "log/fatal.log",
                    Debug);
         {
-            LOG(Debug)<<"before invoke getServerInstance()\n";            
             Server *server = Server::getServerInstace();
-            LOG(Debug)<<"after invoke getServerInstance()\n";
 
             //basic
             RegisterCommand("dbs", listDbsCommand);

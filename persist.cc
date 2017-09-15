@@ -44,10 +44,14 @@ int Persist::m_fSaveDb(std::shared_ptr<Db> d)
     m_fSaveString(db_name);
     m_fSaveInt(db_number);
 
+    std::cout << "code:" << DB_CODE_SELECTDB << std::endl;
+    std::cout << "db_name:" << db_name << std::endl;
+    std::cout << "db_number:" << db_number << std::endl;
+
     for (auto list : d->m_nLists)
         m_fSaveList(list.second);
-    for (auto dict : d->m_nDicts)
-        m_fSaveDict(dict.second);
+    // for (auto dict : d->m_nDicts)
+    //     m_fSaveDict(dict.second);
 }
 
 template <typename T>
@@ -55,6 +59,16 @@ class List;
 int Persist::m_fSaveList(std::shared_ptr<List<std::string>> list)
 {
     LOG(Debug) << "save list\n";
+    int len = list->getLen();
+    m_fSaveCode(DB_CODE_LIST);
+    m_fSaveString(list->getName());
+    m_fSaveInt(len);
+    ListIter<string> iter(list.get(), AL_START_HEAD);
+    ListNode<string> *t = nullptr;
+    while (t = iter.getListNext())
+    {
+        m_fSaveString(t->m_nValue);
+    }
 }
 
 int Persist::m_fSaveDict(std::shared_ptr<Dict<std::string, std::string>> dict)
@@ -77,9 +91,11 @@ int Persist::m_fLoadCode(int &i)
 int Persist::m_fLoadString(std::string &s)
 {
     LOG(Debug) << std::endl;
+    std::cout << m_nRDBFile << endl;
     //we have to know the s.size()
     int len = 0;
     m_fLoadInt(len);
+    std::cout << "string len:" << len << std::endl;
     char *tmp = new char[len];
     m_pFileIO->ioRead(tmp, len);
     for (int i = 0; i < len; i++)
@@ -92,41 +108,57 @@ int Persist::m_fLoadKeyValue(std::string &k, std::string &v)
     LOG(Debug) << std::endl;
 }
 
-int Persist::m_fLoadDb(std::shared_ptr<Db> db)
+int Persist::m_fLoadDb()
 {
     LOG(Debug) << std::endl;
 
-    // int code;
-    // std::string db_name;
-    // db_name.resize(4);
-    // int db_number;
+    int code;
+    std::string db_name;
+    int db_number;
 
-    // m_fLoadCode(code);
-    // m_fLoadString(db_name);
-    // m_fLoadInt(db_number);
+    m_fLoadCode(code);
+    m_fLoadString(db_name);
+    m_fLoadInt(db_number);
 
-    // std::cout << "code:" << code << std::endl;
-    // std::cout << "db_name:" << db_name << std::endl;
-    // std::cout << "db_number:" << db_number << std::endl;
+    std::cout << "code:" << code << std::endl;
+    std::cout << "db_name:" << db_name << std::endl;
+    std::cout << "db_number:" << db_number << std::endl;
+
+    std::shared_ptr<Db> newdb = make_shared<Db>(db_name);
+    Server::getServerInstace()->m_nDbs[db_name] = newdb;
 }
 
-int Persist::m_fLoadList(std::shared_ptr<List<std::string>> list)
+int Persist::m_fLoadList(std::shared_ptr<Db> db)
 {
     LOG(Debug) << std::endl;
-    
+
+    int code;
+    string list_name;
+    int list_len;
+
+    m_fLoadCode(code);
+    m_fLoadString(list_name);
+    m_fLoadInt(list_len);
+
+    shared_of_list p_list = db->findList(list_name);
+    for (int i = 0; i < list_len; i++)
+    {
+        string value;
+        m_fLoadString(value);
+        p_list->add_head(value);
+    }
 }
 
-int Persist::m_fLoadDict(std::shared_ptr<Dict<std::string, std::string>> dict)
+int Persist::m_fLoadDict()
 {
     LOG(Debug) << std::endl;
-    
 }
 
 Persist::Persist(const std::string &file)
     : m_nRDBFile(file)
 {
     LOG(Debug) << std::endl;
-    
+
     m_pFileIO = new FileIO(100, file);
 }
 
@@ -171,18 +203,22 @@ bool Persist::bgsave()
 bool Persist::load()
 {
     std::string head;
-    head.resize(5);
     int eof;
 
     m_fLoadString(head);
-    // m_fLoadDb();
-    m_fLoadCode(eof);
-
+    int dbsNum = 0;
+    m_fLoadInt(dbsNum);
     std::cout << "head:" << head << std::endl;
-    std::cout << "eof:" << eof << std::endl;
+    std::cout << "dbsNum:" << dbsNum << std::endl;
+
+    for (int i = 0; i < dbsNum; i++)
+    {
+        m_fLoadDb();
+    }
+    m_fLoadCode(eof);
+    std::cout << "code:" << eof << std::endl;
 
     m_pFileIO->reset2Head();
-
     return true;
 }
 
