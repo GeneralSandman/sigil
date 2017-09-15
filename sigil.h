@@ -16,6 +16,9 @@ bool deleteDbCommand(std::deque<std::string> &args);
 bool selectCurrDbCommand(std::deque<std::string> &args);
 bool showCurrDbCommand(std::deque<std::string> &args);
 bool quitCommand(std::deque<std::string> &args);
+bool saveCommand(std::deque<std::string> &args);
+bool bgsaveCommand(std::deque<std::string> &args);
+// bool loadCommand(std::deque<std::string> &args);
 
 template <typename K, typename V>
 class Dict;
@@ -47,12 +50,17 @@ public:
   ~Db();
 
   friend class Server;
+  friend class Persist;
 };
+
+class Persist;
 
 class Server
 {
 private:
   static Server *m_pServerInstance;
+  static std::string m_nDbFile;  
+  std::shared_ptr<Persist> m_pPersist;
   std::map<std::string, std::shared_ptr<Db>> m_nDbs;
   static std::shared_ptr<Db> m_nCurrDb;
   static std::map<std::string, command> m_nCommand;
@@ -99,6 +107,8 @@ public:
   bool bgsave();
   bool load();
   ~Server();
+
+  friend class Persist;
 };
 
 class Command

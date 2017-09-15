@@ -1,9 +1,11 @@
 #include "sigil.h"
 #include "log.h"
+#include "persist.h"
 #include <iostream>
 
 int Db::m_nDbsNum = 0;
 Server *Server::m_pServerInstance = nullptr;
+std::string Server::m_nDbFile = "/home/li/sigil/test/dbfile/sigil.db";
 std::shared_ptr<Db> Server::m_nCurrDb = nullptr;
 std::map<std::string, command> Server::m_nCommand;
 
@@ -86,10 +88,12 @@ Db::~Db()
 
 Server::Server()
 {
+    m_pPersist = make_shared<Persist>(m_nDbFile);
     m_nRun = true;
     createDb("init");
     selectCurrDb("init");
 
+    // load();
     LOG(Debug) << "class Server construct\n";
 }
 
@@ -167,9 +171,18 @@ command Server::findCommand(const std::string &n)
     return p->second;
 }
 
-bool Server::save() {}
-bool Server::bgsave() {}
-bool Server::load() {}
+bool Server::save()
+{
+    m_pPersist->save();
+}
+bool Server::bgsave()
+{
+    m_pPersist->bgsave();
+}
+bool Server::load()
+{
+    m_pPersist->load();
+}
 
 Server::~Server()
 {
@@ -285,6 +298,18 @@ bool quitCommand(std::deque<std::string> &args)
     LOG(Info) << "command (quit)" << std::endl;
     Server::getServerInstace()->stop();
     Server::getServerInstace()->save();
+}
+
+bool saveCommand(std::deque<std::string> &args)
+{
+    LOG(Info) << "command (save)" << std::endl;
+    Server::getServerInstace()->save();
+}
+
+bool bgsaveCommand(std::deque<std::string> &args)
+{
+    LOG(Info) << "command (dgsave)" << std::endl;
+    Server::getServerInstace()->bgsave();
 }
 
 ///

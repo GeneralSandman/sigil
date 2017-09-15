@@ -37,6 +37,9 @@ int main()
             RegisterCommand("select", selectCurrDbCommand);
             RegisterCommand("db", showCurrDbCommand);
             RegisterCommand("quit", quitCommand);
+            RegisterCommand("save",saveCommand);
+            // RegisterCommand("bgsave",bgsaveCommand);
+            
             //list
             RegisterCommand("lmem", lmemCommand);
             RegisterCommand("lpush", lpushCommand);

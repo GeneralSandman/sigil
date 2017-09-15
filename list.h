@@ -71,6 +71,10 @@ public:
   ~List();
 };
 
+
+//The function of ListIter is traversal all
+//the ListNode of List,in order to persist
+//the list data
 template <typename T>
 class ListIter
 {
@@ -90,7 +94,8 @@ public:
   }
 };
 
-// List api-------------------
+
+//---List-api--------//
 template <typename T>
 List<T>::List(const std::string &name)
 {
@@ -191,6 +196,7 @@ bool List<T>::m_fAddNodeTail(ListNode<T> *node)
   m_nLen++;
   return true;
 }
+
 template <typename T>
 bool List<T>::m_fDeleteNodeHead()
 {
@@ -198,6 +204,7 @@ bool List<T>::m_fDeleteNodeHead()
     return false;
   m_fDeleteNode(m_pHead);
 }
+
 template <typename T>
 bool List<T>::m_fDeleteNodeTail()
 {
@@ -259,6 +266,7 @@ ListNode<T> *List<T>::m_fFindNodeIndex(long index)
 
   return res;
 }
+
 template <typename T>
 bool List<T>::insert(T newvalue, T oldvalue, int flag)
 {
@@ -269,12 +277,14 @@ bool List<T>::insert(T newvalue, T oldvalue, int flag)
     return false;
   return m_fInsertNode(newnode, oldnode, flag);
 }
+
 template <typename T>
 bool List<T>::dele(T value)
 {
   ListNode<T> *node = m_fFindNode(value);
   return m_fDeleteNode(node);
 }
+
 template <typename T>
 bool List<T>::add_head(T value)
 {
@@ -282,6 +292,7 @@ bool List<T>::add_head(T value)
       new ListNode<T>(value);
   return m_fAddNodeHead(newnode);
 }
+
 template <typename T>
 bool List<T>::add_tail(T value)
 {
@@ -289,6 +300,7 @@ bool List<T>::add_tail(T value)
       new ListNode<T>(value);
   return m_fAddNodeTail(newnode);
 }
+
 template <typename T>
 T List<T>::pop_head()
 {
@@ -339,9 +351,9 @@ List<T>::~List()
   }
   LOG(Info) << "class List destory\n";
 }
-//end List
+//---List-api-end----//
 
-//ListIter  api--------
+//--ListIter api-----//
 template <typename T>
 ListIter<T>::ListIter(List<T> *list, int di)
 {
@@ -383,7 +395,7 @@ ListNode<T> *ListIter<T>::getListNext()
   return res;
 }
 
-//end ListIter
+//--ListIter api-end-//
 
 #include <string>
 #include <deque>
