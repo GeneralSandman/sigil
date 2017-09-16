@@ -62,13 +62,14 @@ int main()
             Command com(server);
             while (server->runing())
             {
-                std::cout << "sigil> ";
+                std::cout << "*sigil> ";
                 com.waitCommand();
             }
 
             delete server;
         }
     }
+    delete Logger::getLoggerInstance();
 
     return 0;
 }

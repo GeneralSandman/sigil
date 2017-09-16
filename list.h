@@ -22,7 +22,7 @@ public:
                          m_pPrev(nullptr),
                          m_pNext(nullptr)
   {
-    LOG(Info) << "class ListNode construrct\n";
+    LOG(Debug) << "class ListNode constructor\n";
   }
   ListNode *getPrev() { return m_pPrev; }
   ListNode *getNext() { return m_pNext; }
@@ -33,7 +33,7 @@ public:
   void setValue(const T &v) { m_nValue = m_nValue; }
   ~ListNode()
   {
-    LOG(Info) << "class ListNode destory\n";
+    LOG(Debug) << "class ListNode destuctor\n";
   }
 };
 
@@ -103,7 +103,7 @@ List<T>::List(const std::string &name)
   m_nLen = 0;
   m_pHead = nullptr;
   m_pTail = nullptr;
-  LOG(Info) << "class List construrct\n";
+  LOG(Debug) << "class List constructor\n";
 }
 
 template <typename T>
@@ -349,7 +349,7 @@ List<T>::~List()
     delete cur;
     cur = next;
   }
-  LOG(Info) << "class List destory\n";
+  LOG(Debug) << "class List destuctor\n";
 }
 //---List-api-end----//
 

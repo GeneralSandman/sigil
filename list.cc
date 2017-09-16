@@ -16,7 +16,7 @@ bool lpushCommand(std::deque<std::string> &args)
 
     int num = 0;
 
-    shared_of_list p_list = Server::getCurrDb()->findList(list);
+    shared_of_list p_list = Server::getCurrDb()->getList(list);
     for (auto t : args)
     {
         if (p_list->add_head(t))
@@ -35,7 +35,7 @@ bool rpushCommand(std::deque<std::string> &args)
 
     int num = 0;
 
-    shared_of_list p_list = Server::getCurrDb()->findList(list);
+    shared_of_list p_list = Server::getCurrDb()->getList(list);
 
     for (auto t : args)
     {
@@ -52,7 +52,7 @@ bool lpopCommand(std::deque<std::string> &args)
     LOG(Info) << "command (lpop)" << std::endl;
     std::string list = args.front();
     args.pop_front();
-    shared_of_list p_list = Server::getCurrDb()->findList(list);
+    shared_of_list p_list = Server::getCurrDb()->getList(list);
     std::cout << p_list->pop_head() << std::endl;
 }
 
@@ -61,7 +61,7 @@ bool rpopCommand(std::deque<std::string> &args)
     LOG(Info) << "command (rpop)" << std::endl;
     std::string list = args.front();
     args.pop_front();
-    shared_of_list p_list = Server::getCurrDb()->findList(list);
+    shared_of_list p_list = Server::getCurrDb()->getList(list);
     std::cout << p_list->pop_tail() << std::endl;
 }
 
@@ -71,7 +71,10 @@ bool llenCommand(std::deque<std::string> &args)
     std::string list = args.front();
     args.pop_front();
     shared_of_list p_list = Server::getCurrDb()->findList(list);
-    std::cout << "length:" << p_list->m_nLen << std::endl;
+    if (p_list == nullptr)
+        std::cout << "length:" << 0 << std::endl;
+    else
+        std::cout << "length:" << p_list->m_nLen << std::endl;
 }
 
 bool lindexCommand(std::deque<std::string> &args)
@@ -107,31 +110,30 @@ bool lremCommand(std::deque<std::string> &args)
     std::string list = args.front();
     args.pop_front();
     shared_of_list p_list = Server::getCurrDb()->findList(list);
-    for (auto t : args)
-    {
-        if (p_list->dele(t))
-            std::cout << t << std::endl;
-    }
+
+    if (p_list == nullptr)
+        std::cout << "(error) no list (" << list << ")\n";
+    else
+        for (auto t : args)
+        {
+            if (p_list->dele(t))
+                std::cout << t << std::endl;
+        }
 }
 
 bool lclearCommand(std::deque<std::string> &args)
 {
     LOG(Info) << "command (lclear)" << std::endl;
-    if (!args.size())
+    if (args.size() != 1)
     {
-        std::cout << "error" << std::endl;
+        std::cout << "(error) args error" << std::endl;
         return false;
     }
 
     std::string list = args[0];
-    args.pop_front();
-
     shared_of_list p_list = Server::getCurrDb()->findList(list);
-    for (auto l : args)
-    {
-        std::string list = args.front();
-        args.pop_front();
-        std::cout << p_list->m_nLen << std::endl;
+    if (p_list == nullptr)
+        std::cout << "(error) no list (" << list << ")\n";
+    else
         p_list->clear();
-    }
 }

@@ -38,11 +38,15 @@ int Persist::m_fSaveDb(std::shared_ptr<Db> d)
     m_fSaveString(db_name);
     m_fSaveInt(db_number);
 
-    std::cout << "db_name:" << db_name
-              << ",db_number:" << db_number << std::endl;
+    int lists_num = d->m_nLists.size();
 
-    // for (auto list : d->m_nLists)
-    //     m_fSaveList(list.second);
+    std::cout << "db_name:" << db_name
+              << ",db_number:" << db_number
+              << ",lists num:" << lists_num << std::endl;
+
+    m_fSaveInt(lists_num);
+    for (auto list : d->m_nLists)
+        m_fSaveList(list.second);
     // for (auto dict : d->m_nDicts)
     //     m_fSaveDict(dict.second);
 }
@@ -55,11 +59,16 @@ int Persist::m_fSaveList(std::shared_ptr<List<std::string>> list)
     m_fSaveCode(DB_CODE_LIST);
     m_fSaveString(list->getName());
     m_fSaveInt(len);
+
+    std::cout << "list_name:" << list->getName()
+              << ",list_len:" << len << std::endl;
+
     ListIter<string> iter(list.get(), AL_START_HEAD);
     ListNode<string> *t = nullptr;
     while (t = iter.getListNext())
     {
         m_fSaveString(t->m_nValue);
+        std::cout << "save " << t->m_nValue << std::endl;
     }
 }
 
@@ -103,17 +112,21 @@ int Persist::m_fLoadDb()
     m_fLoadString(db_name);
     m_fLoadInt(db_number);
 
-    // std::cout << "code:" << code << std::endl;
-    std::cout << "db_name:" << db_name
-              << ",db_number:" << db_number << std::endl;
+    //create new datebase,
+    //the init datebase is been overrideed;
+    std::shared_ptr<Db> newdb = make_shared<Db>(db_name);
+    Server::getServerInstace()->m_nDbs[db_name] = newdb;
 
-    if (db_number == 0)
+    int lists_num = 0;
+    m_fLoadInt(lists_num);
+
+    std::cout << "db_name:" << db_name
+              << ",db_number:" << db_number
+              << ",lists num:" << lists_num << std::endl;
+
+    for (int i = 0; i < lists_num; i++)
     {
-        //is init datebase,only update the datebase.
-    }
-    else
-    {
-        Server::getServerInstace()->createDb(db_name);
+        m_fLoadList(newdb);
     }
 }
 
@@ -127,13 +140,18 @@ int Persist::m_fLoadList(std::shared_ptr<Db> db)
     m_fLoadString(list_name);
     m_fLoadInt(list_len);
 
+    std::cout << "list_name:" << list_name
+              << "list_len:" << list_len << std::endl;
+
     shared_of_list p_list = db->findList(list_name);
     for (int i = 0; i < list_len; i++)
     {
         string value;
         m_fLoadString(value);
+        std::cout << "add to list:" << value << std::endl;
         p_list->add_head(value);
     }
+    std::cout <<"lists num-"<< db->m_nLists.size() << std::endl;
 }
 
 int Persist::m_fLoadDict()

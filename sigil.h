@@ -30,23 +30,22 @@ class Db
 {
 private:
   static int m_nDbsNum;
+  static int m_nCreatedDbs;
   int m_nNumber;
   std::string m_nName;
 
-  std::string m_nPrevDict; //store the prev mainpulated dict
-  shared_of_dict m_pPrevDict;
   std::map<std::string, shared_of_dict> m_nDicts;
-
-  std::string m_nPrevList; //store the prev mainpulated list
-  shared_of_list m_pPrevList;
   std::map<std::string, shared_of_list> m_nLists;
 
 public:
   Db(const std::string &name);
-  std::string &getName();
-  int getNumber();
+  std::string &getName() { return m_nName; }
+  int getNumber() { return m_nNumber; }
   shared_of_dict findDict(const std::string &dict);
+  shared_of_dict getDict(const std::string &dict);
   shared_of_list findList(const std::string &list);
+  shared_of_list getList(const std::string &list);
+
   ~Db();
 
   friend class Server;
@@ -59,7 +58,7 @@ class Server
 {
 private:
   static Server *m_pServerInstance;
-  static std::string m_nDbFile;  
+  static std::string m_nDbFile;
   std::shared_ptr<Persist> m_pPersist;
   std::map<std::string, std::shared_ptr<Db>> m_nDbs;
   static std::shared_ptr<Db> m_nCurrDb;
@@ -92,15 +91,8 @@ public:
   {
     m_nCommand[n] = c;
   }
-  bool runing(void)
-  {
-    //quit sigil
-    return m_nRun;
-  }
-  void stop(void)
-  {
-    m_nRun = false;
-  }
+  bool runing(void) { return m_nRun; }
+  void stop(void) { m_nRun = false; }
   command findCommand(const std::string &n);
   bool save();
   bool bgsave();

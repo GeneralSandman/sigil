@@ -4,9 +4,9 @@
 #include <iostream>
 #include <memory>
 
+Logger *Logger::m_pLoggerInstance=nullptr;
 
 std::ofstream Logger::m_nNullStream(0);
-
 std::ofstream Logger::m_nDebugLogFile;
 std::ofstream Logger::m_nInfoLogFile;
 std::ofstream Logger::m_nErrLogFile;
@@ -148,5 +148,5 @@ Logger::~Logger()
         m_nErrLogFile.close();
         m_nFatalLogFile.close();
     }
-    // std::cout << "class Logger destory\n";
+    std::cout << "class Logger destory\n";
 }

@@ -4,6 +4,7 @@
 #include <iostream>
 
 int Db::m_nDbsNum = 0;
+int Db::m_nCreatedDbs = 0;
 Server *Server::m_pServerInstance = nullptr;
 std::string Server::m_nDbFile = "/home/li/sigil/test/dbfile/sigil.db";
 std::shared_ptr<Db> Server::m_nCurrDb = nullptr;
@@ -12,74 +13,74 @@ std::map<std::string, command> Server::m_nCommand;
 Db::Db(const std::string &name)
     : m_nName(name)
 {
-    m_nNumber = m_nDbsNum;
+    m_nNumber = m_nCreatedDbs;
     m_nDbsNum++;
+    m_nCreatedDbs++;
     LOG(Debug) << "class Db constructor" << std::endl;
 }
 
-std::string &Db::getName()
-{
-    return m_nName;
-}
-
-int Db::getNumber()
-{
-    return m_nNumber;
-}
-
+//If dict exists,return shared_ptr<Dict>
+//else,return nullptr
 shared_of_dict Db::findDict(const std::string &dict)
 {
-    if (m_nPrevDict == dict)
-        return m_pPrevDict;
+    auto p = m_nDicts.find(dict);
+    if (p == m_nDicts.end()) //create new dict
+        return nullptr;
+    else
+        return p->second;
+}
 
-    //have to find or create new dict
-    m_nPrevDict = dict;
+//If dict exists,return shared_ptr<Dict>
+//else,create new dict and return
+shared_of_dict Db::getDict(const std::string &dict)
+{
     auto p = m_nDicts.find(dict);
     if (p == m_nDicts.end()) //create new dict
     {
         std::shared_ptr<Dict<std::string, std::string>> newdict =
             make_shared<Dict<std::string, std::string>>(dict);
         m_nDicts[dict] = newdict;
-        m_pPrevDict = newdict;
+        return newdict;
     }
     else
-        m_pPrevDict = p->second;
-
-    return m_pPrevDict;
+        return p->second;
 }
 
+//If list exists,return shared_ptr<List>
+//else,return nullptr
 shared_of_list Db::findList(const std::string &list)
 {
-    if (m_nPrevList == list)
-        return m_pPrevList;
+    auto p = m_nLists.find(list);
+    if (p == m_nLists.end()) //create new list
+    {
+        return nullptr;
+    }
+    else
+        return p->second;
+}
 
-    //have to find or create new list
-    m_nPrevList = list;
+//If list exists,return shared_ptr<List>
+//else,create new list and return
+shared_of_list Db::getList(const std::string &list)
+{
     auto p = m_nLists.find(list);
     if (p == m_nLists.end()) //create new list
     {
         shared_of_list newlist =
             make_shared<List<std::string>>(list);
         m_nLists[list] = newlist;
-        m_pPrevList = newlist;
+        return newlist;
     }
     else
-        m_pPrevList = p->second;
-    return m_pPrevList;
+        return p->second;
 }
 
 Db::~Db()
 {
     for (auto t : m_nDicts)
-    {
         t.second = nullptr;
-    }
-
     for (auto t : m_nLists)
-    {
         t.second = nullptr;
-    }
-
     m_nDbsNum--;
 
     LOG(Debug) << "class Db destructor" << std::endl;
@@ -92,11 +93,7 @@ Server::Server()
     m_pPersist = make_shared<Persist>(m_nDbFile);
     m_nRun = true;
 
-    auto p = m_nDbs.find("init");
-    if (p == m_nDbs.end())
-    {
-        createDb("init");
-    }
+    createDb("init");
     selectCurrDb("init");
 
     LOG(Debug) << "class Server constructor\n";
@@ -106,8 +103,7 @@ void Server::listDbs(void)
 {
     std::cout << Db::m_nDbsNum << ":" << std::endl;
     for (auto t : m_nDbs)
-        std::cout << t.second->getNumber() << ":" << t.first << endl;
-    // std::cout << t.first << endl;
+        std::cout << t.second->getNumber() << "):" << t.first << endl;
 }
 
 bool Server::createDb(const std::string &db)
@@ -115,7 +111,7 @@ bool Server::createDb(const std::string &db)
     auto p = m_nDbs.find(db);
     if (p != m_nDbs.end())
     {
-        std::cout << db << "existed,can't create\n";
+        std::cout << "(error) " << db << "existed,can't create\n";
         return false;
     }
     std::shared_ptr<Db> newdb = make_shared<Db>(db);
@@ -138,7 +134,7 @@ bool Server::deleteDb(const std::string &db)
     }
     else
     {
-        std::cout << "can't find " << db << endl;
+        std::cout << "(error) can't delete " << db << endl;
     }
 }
 
@@ -148,12 +144,14 @@ bool Server::selectCurrDb(const std::string &db)
     if (p != m_nDbs.end())
     {
         m_nCurrDb = p->second;
+        std::cout << "select db (" << db << ")" << endl;
     }
     else
     {
-        std::cout << "can't select (" << db << ")" << endl;
+        std::cout << "(error) can't select (" << db << ")" << endl;
     }
 }
+
 void Server::showCurrDb(void)
 {
     std::cout << m_nCurrDb->getName() << std::endl;
@@ -164,7 +162,7 @@ void Server::setCurrDb(const std::string &db)
     auto p = m_nDbs.find(db);
     if (p == m_nDbs.end())
     {
-        std::cout << db << " not exists\n";
+        std::cout << "(error) " << db << " not exists\n";
         return;
     }
     m_nCurrDb = p->second;
@@ -175,7 +173,6 @@ command Server::findCommand(const std::string &n)
     auto p = m_nCommand.find(n);
     if (p == m_nCommand.end())
     {
-        std::cout << "command error:" << n << "\n";
         return nullptr;
     }
     return p->second;
@@ -185,10 +182,12 @@ bool Server::save()
 {
     m_pPersist->save();
 }
+
 bool Server::bgsave()
 {
     m_pPersist->bgsave();
 }
+
 bool Server::load()
 {
     m_pPersist->load();
@@ -196,11 +195,6 @@ bool Server::load()
 
 Server::~Server()
 {
-    // if (m_pServerInstance)
-    // {
-    //     delete m_pServerInstance;
-    //     m_pServerInstance = nullptr;
-    // }
     m_pPersist = nullptr;
     for (auto t : m_nDbs)
     {
@@ -215,6 +209,7 @@ int Command::m_fGetCommand()
 {
     std::cin.getline(m_nStr, 256, '\n');
 }
+
 void Command::m_fParseCommand()
 {
     int length = strlen(m_nStr);
@@ -239,6 +234,7 @@ void Command::m_fParseCommand()
     m_nName = m_nArgs.front();
     m_nArgs.pop_front();
 }
+
 void Command::m_fInvokeCommand()
 {
     auto com = m_pServer->findCommand(m_nName);
@@ -248,7 +244,7 @@ void Command::m_fInvokeCommand()
     }
     else
     {
-        std::cout << "command error:" << m_nName << "\n";
+        std::cout << "(error) not command:" << m_nName << "\n";
     }
 }
 
@@ -261,44 +257,56 @@ bool listDbsCommand(std::deque<std::string> &args)
     Server::getServerInstace()->listDbs();
     return true;
 }
+
 bool createDbCommand(std::deque<std::string> &args)
 {
     LOG(Info) << "command (createdb)" << std::endl;
-
+    if (args.empty())
+    {
+        std::cout << "(error) args error\n";
+        return false;
+    }
     for (auto t : args)
     {
         Server::getServerInstace()->createDb(t);
     }
     return true;
 }
+
 bool deleteDbCommand(std::deque<std::string> &args)
 {
     LOG(Info) << "command (deletedb)" << std::endl;
-
+    if (args.empty())
+    {
+        std::cout << "(error) args error\n";
+        return false;
+    }
     for (auto t : args)
     {
         Server::getServerInstace()->deleteDb(t);
     }
     return true;
 }
+
 bool selectCurrDbCommand(std::deque<std::string> &args)
 {
     LOG(Info) << "command (select)" << std::endl;
 
     if (args.size() != 1)
     {
-        std::cout << "error" << std::endl;
+        std::cout << "(error) args error" << std::endl;
         return false;
     }
     return Server::getServerInstace()->selectCurrDb(args[0]);
 }
+
 bool showCurrDbCommand(std::deque<std::string> &args)
 {
     LOG(Info) << "command (db)" << std::endl;
 
-    if (args.size() != 0)
+    if (!args.empty())
     {
-        std::cout << "error" << std::endl;
+        std::cout << "(error) args error" << std::endl;
         return false;
     }
     Server::getServerInstace()->showCurrDb();
@@ -307,6 +315,11 @@ bool showCurrDbCommand(std::deque<std::string> &args)
 bool quitCommand(std::deque<std::string> &args)
 {
     LOG(Info) << "command (quit)" << std::endl;
+    if (!args.empty())
+    {
+        std::cout << "(error) args error" << std::endl;
+        return false;
+    }
     Server::getServerInstace()->stop();
     Server::getServerInstace()->save();
 }
@@ -314,26 +327,21 @@ bool quitCommand(std::deque<std::string> &args)
 bool saveCommand(std::deque<std::string> &args)
 {
     LOG(Info) << "command (save)" << std::endl;
+    if (!args.empty())
+    {
+        std::cout << "(error) args error" << std::endl;
+        return false;
+    }
     Server::getServerInstace()->save();
 }
 
 bool bgsaveCommand(std::deque<std::string> &args)
 {
     LOG(Info) << "command (dgsave)" << std::endl;
+    if (!args.empty())
+    {
+        std::cout << "(error) args error" << std::endl;
+        return false;
+    }
     Server::getServerInstace()->bgsave();
 }
-
-///
-
-// RegisterCommand("dbs", listDbsCommand);
-// RegisterCommand("createdb", createDbCommand);
-// RegisterCommand("deletedb", deleteDbCommand);
-// RegisterCommand("select", selectCurrDbCommand);
-// RegisterCommand("db", showCurrDbCommand);
-///
-
-// Server::regitCommand("dbs", listDbsCommand);
-// Server::regitCommand("createdb", createDbCommand);
-// Server::regitCommand("deletedb", deleteDbCommand);
-// Server::regitCommand("select", selectCurrDbCommand);
-// Server::regitCommand("db", showCurrDbCommand);
