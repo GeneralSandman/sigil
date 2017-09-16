@@ -14,7 +14,7 @@ Db::Db(const std::string &name)
 {
     m_nNumber = m_nDbsNum;
     m_nDbsNum++;
-    LOG(Debug) << "class Db construct" << std::endl;
+    LOG(Debug) << "class Db constructor" << std::endl;
 }
 
 std::string &Db::getName()
@@ -41,7 +41,6 @@ shared_of_dict Db::findDict(const std::string &dict)
             make_shared<Dict<std::string, std::string>>(dict);
         m_nDicts[dict] = newdict;
         m_pPrevDict = newdict;
-        LOG(Info) << "create new dict" << std::endl;
     }
     else
         m_pPrevDict = p->second;
@@ -81,7 +80,9 @@ Db::~Db()
         t.second = nullptr;
     }
 
-    LOG(Debug) << "class Db destory" << std::endl;
+    m_nDbsNum--;
+
+    LOG(Debug) << "class Db destructor" << std::endl;
 }
 
 ////server api
@@ -90,11 +91,15 @@ Server::Server()
 {
     m_pPersist = make_shared<Persist>(m_nDbFile);
     m_nRun = true;
-    createDb("init");
+
+    auto p = m_nDbs.find("init");
+    if (p == m_nDbs.end())
+    {
+        createDb("init");
+    }
     selectCurrDb("init");
 
-    m_pPersist->load();
-    LOG(Debug) << "class Server construct\n";
+    LOG(Debug) << "class Server constructor\n";
 }
 
 void Server::listDbs(void)
@@ -103,12 +108,16 @@ void Server::listDbs(void)
     for (auto t : m_nDbs)
         std::cout << t.second->getNumber() << ":" << t.first << endl;
     // std::cout << t.first << endl;
-
-    LOG(Info) << "list dbs" << std::endl;
 }
 
 bool Server::createDb(const std::string &db)
 {
+    auto p = m_nDbs.find(db);
+    if (p != m_nDbs.end())
+    {
+        std::cout << db << "existed,can't create\n";
+        return false;
+    }
     std::shared_ptr<Db> newdb = make_shared<Db>(db);
     m_nDbs[db] = newdb;
     return true;
@@ -125,6 +134,7 @@ bool Server::deleteDb(const std::string &db)
     if (p != m_nDbs.end())
     {
         p->second = nullptr;
+        m_nDbs.erase(p);
     }
     else
     {
@@ -191,11 +201,12 @@ Server::~Server()
     //     delete m_pServerInstance;
     //     m_pServerInstance = nullptr;
     // }
+    m_pPersist = nullptr;
     for (auto t : m_nDbs)
     {
         t.second = nullptr;
     }
-    LOG(Debug) << "class Server destory\n";
+    LOG(Debug) << "class Server destructor\n";
 }
 //////
 

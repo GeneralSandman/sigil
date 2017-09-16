@@ -20,8 +20,6 @@ public:
   IO(size_t max = 0);
   size_t ioRead(void *buf, size_t len)
   {
-    LOG(Debug) << std::endl;
-
     while (len)
     {
       size_t bytes_to_read = 0;
@@ -39,8 +37,6 @@ public:
   }
   size_t ioWrite(const void *buf, size_t len)
   {
-    LOG(Debug) << std::endl;
-
     while (len)
     {
       size_t bytes_to_write = 0;
@@ -57,8 +53,6 @@ public:
   }
   int ioFlush()
   {
-    LOG(Debug) << std::endl;
-
     m_fFlush();
   }
   virtual ~IO();
@@ -77,7 +71,7 @@ protected:
   virtual int m_fFlush();
 
 public:
-  FileIO(size_t max, const std::string &);
+  FileIO(size_t max, const std::string &, const char *);
   void reset2Head()
   {
     rewind(m_pFp);

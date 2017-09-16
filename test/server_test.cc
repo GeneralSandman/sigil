@@ -27,7 +27,7 @@ int main()
                    Debug);
         {
             Server *server = Server::getServerInstace();
-
+            server->load();
             //basic
             RegisterCommand("dbs", listDbsCommand);
             RegisterCommand("createdb", createDbCommand);
@@ -35,9 +35,9 @@ int main()
             RegisterCommand("select", selectCurrDbCommand);
             RegisterCommand("db", showCurrDbCommand);
             RegisterCommand("quit", quitCommand);
-            RegisterCommand("save",saveCommand);
+            RegisterCommand("save", saveCommand);
             // RegisterCommand("bgsave",bgsaveCommand);
-            
+
             //list
             RegisterCommand("lmem", lmemCommand);
             RegisterCommand("lpush", lpushCommand);
@@ -68,7 +68,6 @@ int main()
 
             delete server;
         }
-
     }
 
     return 0;

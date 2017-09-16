@@ -78,7 +78,6 @@ public:
   int getDbsNum() { return Db::m_nDbsNum; }
   static Server *getServerInstace()
   {
-    LOG(Debug) << std::endl;
     if (m_pServerInstance == nullptr)
       m_pServerInstance = new Server();
 

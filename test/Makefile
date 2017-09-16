@@ -15,8 +15,8 @@ virtual_test:virtual_test.o log.o
 	$(link) virtual_test virtual_test.o log.o
 io_test:io_test.o io.o log.o api.o
 	$(link) io_test io_test.o io.o log.o api.o
-persist_test:persist_test.o persist.o io.o log.o api.o
-	$(link) persist_test persist_test.o persist.o io.o log.o api.o
+persist_test:persist_test.o persist.o io.o log.o api.o sigil.o
+	$(link) persist_test persist_test.o persist.o io.o log.o api.o sigil.o
 
 # test= binaryfile_test dict_test list_test server_test log_test db_test virtual_test\
 # 	io_test persist_test

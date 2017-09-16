@@ -16,9 +16,10 @@ template <typename K, typename V>
 class Dict;
 class Persist
 {
-private:
+public:
   std::string m_nRDBFile;
-  FileIO *m_pFileIO;
+  FileIO *m_pSaveFileIO;
+  FileIO *m_pLoadFileIO;  
 
   int m_fSaveInt(int);
   int m_fSaveCode(int);
