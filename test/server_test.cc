@@ -69,7 +69,6 @@ int main()
             delete server;
         }
     }
-    delete Logger::getLoggerInstance();
 
     return 0;
 }

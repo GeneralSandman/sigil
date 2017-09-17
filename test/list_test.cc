@@ -10,17 +10,45 @@ int main()
 
     {
         List<string> l("test");
-
-        for (int i = 0; i < 8; i++)
-        {
+        for (int i = 0; i < 5; i++)
             l.add_head("a");
+
+        std::cout << "---------\n";
+        std::cout << "test getByIndex()\n";
+        string value;
+        for (int i = 0; i < 10; i++)
+        {
+            if (l.getByIndex(i, value))
+                std::cout << "get index " << i << ":" << value << std::endl;
         }
 
-        ListIter<string> iter(&l, AL_START_HEAD);        
-        ListNode<string> *t = nullptr;
-        while (t = iter.getListNext())
+        std::cout << "---------\n";
+        std::cout << "test setByIndex()\n";
+        for (int i = 0; i < 10; i++)
         {
-            std::cout << t->m_nValue << std::endl;
+            if (l.setByIndex(i, "value"))
+                std::cout << "set index " << i << ":"
+                          << "value" << std::endl;
+        }
+
+        std::cout << "---------\n";
+        std::cout << "test getByRange()\n";
+        vector<string> res;
+        if (l.getByRange(res, 0, 4))
+        {
+            for (auto t : res)
+                cout << t << " ";
+            cout << endl;
+        }
+
+        std::cout << "---------\n";
+        std::cout << "test getAll()\n";
+        vector<string> aa;
+        if (l.getAll(aa))
+        {
+            for (auto t : aa)
+                cout << t << " ";
+            cout << endl;
         }
     }
 

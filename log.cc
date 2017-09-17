@@ -4,7 +4,7 @@
 #include <iostream>
 #include <memory>
 
-Logger *Logger::m_pLoggerInstance=nullptr;
+// Logger *Logger::m_pLoggerInstance=nullptr;
 
 std::ofstream Logger::m_nNullStream(0);
 std::ofstream Logger::m_nDebugLogFile;

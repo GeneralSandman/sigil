@@ -56,6 +56,8 @@ class List;
 int Persist::m_fSaveList(std::shared_ptr<List<std::string>> list)
 {
     int len = list->getLen();
+    if (!len)//list have no node,needn't to save this list
+        return 0;
     m_fSaveCode(DB_CODE_LIST);
     m_fSaveString(list->getName());
     m_fSaveInt(len);
@@ -151,7 +153,7 @@ int Persist::m_fLoadList(std::shared_ptr<Db> db)
         std::cout << "add to list:" << value << std::endl;
         p_list->add_head(value);
     }
-    std::cout <<"lists num-"<< db->m_nLists.size() << std::endl;
+    std::cout << "lists num-" << db->m_nLists.size() << std::endl;
 }
 
 int Persist::m_fLoadDict()

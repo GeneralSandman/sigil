@@ -1,6 +1,7 @@
 #ifndef LIST_H
 #define LIST_H
 #include <iostream>
+#include <vector>
 #include "log.h"
 
 #define AL_START_HEAD 0
@@ -26,11 +27,11 @@ public:
   }
   ListNode *getPrev() { return m_pPrev; }
   ListNode *getNext() { return m_pNext; }
-  ListNode *getValue() { return m_nValue; }
+  T getValue() { return m_nValue; }
 
   void setPrev(ListNode *node) { m_pPrev = node; }
   void setNext(ListNode *node) { m_pNext = node; }
-  void setValue(const T &v) { m_nValue = m_nValue; }
+  void setValue(const T &v) { m_nValue = v; }
   ~ListNode()
   {
     LOG(Debug) << "class ListNode destuctor\n";
@@ -66,6 +67,10 @@ public:
   bool add_tail(T);
   T pop_head();
   T pop_tail();
+  bool getByIndex(int, T &);
+  bool setByIndex(int, const T &);
+  bool getByRange(std::vector<T> &, int, int);
+  bool getAll(std::vector<T> &);
   bool clear();
 
   List dupLict();
@@ -107,10 +112,10 @@ List<T>::List(const std::string &name)
 }
 
 template <typename T>
-bool List<T>::m_fInsertNode(ListNode<T> *newnode, ListNode<T> *oldnode, int after)
+bool List<T>::m_fInsertNode(ListNode<T> *newnode, ListNode<T> *oldnode, int flag)
 {
 
-  if (after)
+  if (After == flag)
   {
     ListNode<T> *oldnext = oldnode->m_pNext;
     newnode->m_pNext = oldnext;
@@ -121,7 +126,7 @@ bool List<T>::m_fInsertNode(ListNode<T> *newnode, ListNode<T> *oldnode, int afte
     if (m_pTail == oldnode)
       m_pTail = newnode;
   }
-  else
+  else if (Before == flag)
   {
     ListNode<T> *oldprev = oldnode->m_pPrev;
     newnode->m_pPrev = oldprev;
@@ -270,11 +275,13 @@ ListNode<T> *List<T>::m_fFindNodeIndex(long index)
 template <typename T>
 bool List<T>::insert(T newvalue, T oldvalue, int flag)
 {
-  ListNode<T> *newnode =
-      new ListNode<T>(newvalue);
+
   ListNode<T> *oldnode = m_fFindNode(oldvalue);
   if (oldnode == nullptr)
     return false;
+
+  ListNode<T> *newnode =
+      new ListNode<T>(newvalue);
   return m_fInsertNode(newnode, oldnode, flag);
 }
 
@@ -321,6 +328,98 @@ T List<T>::pop_tail()
     m_fDeleteNodeTail();
     return res;
   }
+}
+template <typename T>
+bool List<T>::getByIndex(int index, T &value)
+{
+  if (index >= m_nLen)
+  {
+    return false;
+  }
+  else
+  {
+    ListIter<T> iter(this, AL_START_HEAD);
+    ListNode<T> *next = nullptr;
+    int i = 0;
+
+    while ((next = iter.getListNext()) != nullptr)
+    {
+      if (i == index)
+      {
+        value = next->getValue();
+        break;
+      }
+      i++;
+    }
+    return true;
+  }
+}
+
+template <typename T>
+bool List<T>::setByIndex(int index, const T &value)
+{
+  if (index >= m_nLen)
+  {
+    return false;
+  }
+  else
+  {
+    ListIter<T> iter(this, AL_START_HEAD);
+    ListNode<T> *next = nullptr;
+    int i = 0;
+
+    while ((next = iter.getListNext()) != nullptr)
+    {
+      if (i == index)
+      {
+        next->setValue(value);
+        break;
+      }
+      i++;
+    }
+    return true;
+  }
+}
+
+template <typename T>
+bool List<T>::getByRange(std::vector<T> &res, int begin, int end)
+{
+  if (begin > end || begin > m_nLen || end > m_nLen)
+    return false;
+
+  int size = end - begin;
+  res.resize(size);
+
+  ListIter<T> iter(this, AL_START_HEAD);
+  ListNode<T> *next = nullptr;
+
+  int vector_index = 0;
+  int list_index = 0;
+
+  while ((next = iter.getListNext()) != nullptr)
+  {
+    if (list_index < begin)
+    {
+      list_index++;
+    }
+    else if (begin <= list_index && list_index < end)
+    {
+      res[vector_index] = next->getValue();
+      vector_index++;
+      list_index++;
+    }
+    else if (list_index >= end)
+    {
+      break;
+    }
+  }
+  return true;
+}
+
+template <typename T>
+bool List<T>::getAll(std::vector<T> &res)
+{
+  getByRange(res, 0, m_nLen);
 }
 
 template <typename T>

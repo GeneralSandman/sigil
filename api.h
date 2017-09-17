@@ -7,6 +7,11 @@
 #include <map>
 #include <vector>
 
+inline void handleArgsError()
+{
+    std::cout << "(error) args error\n";
+}
+
 pid_t gettid();
 
 void handle_error(const char *msg);

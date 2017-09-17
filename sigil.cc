@@ -244,7 +244,7 @@ void Command::m_fInvokeCommand()
     }
     else
     {
-        std::cout << "(error) not command:" << m_nName << "\n";
+        std::cout << "(error) not command \"" << m_nName << "\"\n";
     }
 }
 
