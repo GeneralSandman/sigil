@@ -1,40 +1,41 @@
 #include "dict.h"
+#include "api.h"
 #include "sigil.h"
 #include "log.h"
 #include <iostream>
 
 bool hsetCommand(std::deque<std::string> &args)
 {
-    LOG(Debug) << std::endl;
     LOG(Info) << "command (hset)" << std::endl;
 
     if (args.size() != 3)
     {
-        std::cout << "error" << std::endl;
+        handleArgsError();
         return false;
     }
     std::string dict = args[0];
     std::string key = args[1];
     std::string value = args[2];
 
-    std::shared_ptr<Dict<std::string, std::string>> d = Server::getCurrDb()->findDict(dict);
+    std::shared_ptr<Dict<std::string, std::string>> d =
+        Server::getCurrDb()->getDict(dict);
     //find the dict or create a new
     return d->dictSet(key, value);
 }
 
 bool hmsetCommand(std::deque<std::string> &args)
 {
-    LOG(Debug) << std::endl;
     LOG(Info) << "command (hmset)" << std::endl;
 
     if (args.size() % 2 == 0)
     {
-        std::cout << "error" << std::endl;
+        handleArgsError();
         return false;
     }
     std::string dict = args.front();
     args.pop_front();
-    std::shared_ptr<Dict<std::string, std::string>> d = Server::getCurrDb()->findDict(dict);
+    std::shared_ptr<Dict<std::string, std::string>> d =
+        Server::getCurrDb()->getDict(dict);
 
     while (args.size())
     {
@@ -52,71 +53,102 @@ bool hmsetCommand(std::deque<std::string> &args)
 
 bool hgetCommand(std::deque<std::string> &args)
 {
-    LOG(Debug) << std::endl;
     LOG(Info) << "command (hget)" << std::endl;
 
     if (args.size() != 2)
     {
-        std::cout << "error" << std::endl;
+        handleArgsError();
         return false;
     }
     std::string dict = args[0];
     std::string key = args[1];
-    std::shared_ptr<Dict<std::string, std::string>> d = Server::getCurrDb()->findDict(dict);
-    auto res = d->dictGet(key);
-    std::cout << res << endl;
+    std::shared_ptr<Dict<std::string, std::string>> d =
+        Server::getCurrDb()->findDict(dict);
+    if (d == nullptr)
+    {
+        std::cout << "(error) no dict \"" << dict << "\"" << std::endl;
+        return false;
+    }
+    std::string res;
+    if (d->dictGet(key, res))
+    {
+        std::cout << res << std::endl;
+        return true;
+    }
+    else
+    {
+        std::cout << "(error) no key \"" << key << "\"" << std::endl;
+        return false;
+    }
 }
 
 bool hmgetCommand(std::deque<std::string> &args)
 {
-    LOG(Debug) << std::endl;
     LOG(Info) << "command (hmget)" << std::endl;
 
     if (args.size() <= 1)
     {
-        std::cout << "error" << std::endl;
+        handleArgsError();
         return false;
     }
 
     std::string dict = args.front();
     args.pop_front();
-    std::shared_ptr<Dict<std::string, std::string>> d = Server::getCurrDb()->findDict(dict);
+    std::shared_ptr<Dict<std::string, std::string>> d =
+        Server::getCurrDb()->findDict(dict);
 
     while (args.size())
     {
         std::string key = args.front();
         args.pop_front();
 
-        auto res = d->dictGet(key);
-        std::cout << key << ":" << res << endl;
+        std::string res;
+        if (d->dictGet(key, res))
+            std::cout << res << std::endl;
     }
+
+    return true;
 }
 
 bool hlenCommand(std::deque<std::string> &args)
 {
-    LOG(Debug) << std::endl;
     LOG(Info) << "command (hlen)" << std::endl;
+
+    if (args.size() != 1)
+    {
+        handleArgsError();
+        return false;
+    }
 
     // std::shared_ptr<Dict<std::string, std::string>> d = Server::getCurrDb()->findDict(dict);
     std::string dict = args[0];
-    std::shared_ptr<Dict<std::string, std::string>> d = Server::getCurrDb()->findDict(dict);
-    int length = d->dictLen();
+    std::shared_ptr<Dict<std::string, std::string>> d =
+        Server::getCurrDb()->findDict(dict);
+
+    int length = 0;
+    if (d != nullptr)
+        length = d->dictLen();
     std::cout << "length:" << length << std::endl;
+
+    return true;
 }
 
 bool hclearCommand(std::deque<std::string> &args)
 {
-    LOG(Debug) << std::endl;
     LOG(Info) << "command (hclear)" << std::endl;
-
+    if (args.size() != 1)
+    {
+        handleArgsError();
+        return false;
+    }
     std::string dict = args[0];
-    std::shared_ptr<Dict<std::string, std::string>> d = Server::getCurrDb()->findDict(dict);
-    d->dictClear();
+    std::shared_ptr<Dict<std::string, std::string>> d =
+        Server::getCurrDb()->findDict(dict);
+    if (d != nullptr)
+    {
+        d->dictClear();
+        return true;
+    }
+    else
+        return false;
 }
-
-///
-// Server::regitCommand("hset", hsetCommand);
-// Server::regitCommand("hmset", hmsetCommand);
-// Server::regitCommand("hget", hgetCommand);
-
-///

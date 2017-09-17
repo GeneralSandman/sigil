@@ -65,8 +65,8 @@ int Persist::m_fSaveList(std::shared_ptr<List<std::string>> list)
     std::cout << "list_name:" << list->getName()
               << ",list_len:" << len << std::endl;
 
-    ListIter<string> iter(list.get(), AL_START_HEAD);
-    ListNode<string> *t = nullptr;
+    ListIter<std::string> iter(list.get(), AL_START_HEAD);
+    ListNode<std::string> *t = nullptr;
     while (t = iter.getListNext())
     {
         m_fSaveString(t->m_nValue);
@@ -116,7 +116,7 @@ int Persist::m_fLoadDb()
 
     //create new datebase,
     //the init datebase is been overrideed;
-    std::shared_ptr<Db> newdb = make_shared<Db>(db_name);
+    std::shared_ptr<Db> newdb = std::make_shared<Db>(db_name);
     Server::getServerInstace()->m_nDbs[db_name] = newdb;
 
     int lists_num = 0;
@@ -135,7 +135,7 @@ int Persist::m_fLoadDb()
 int Persist::m_fLoadList(std::shared_ptr<Db> db)
 {
     int code;
-    string list_name;
+    std::string list_name;
     int list_len;
 
     m_fLoadCode(code);
@@ -148,7 +148,7 @@ int Persist::m_fLoadList(std::shared_ptr<Db> db)
     shared_of_list p_list = db->getList(list_name);
     for (int i = 0; i < list_len; i++)
     {
-        string value;
+        std::string value;
         m_fLoadString(value);
         std::cout << "add to list:" << value << std::endl;
         p_list->add_tail(value);

@@ -108,7 +108,7 @@ lclear key
 hset key field value
 ```
 
-- 获取哈希表key中field的值
+- 获取哈希表key中field的值(存在bug)
 ```
 hget key field
 ```
@@ -117,7 +117,7 @@ hget key field
 ```
 hmset key field1 value1 [field2 value2 ]
 ```
-- 同时获取哈希表key中的多个field的值
+- 同时获取哈希表key中的多个field的值(存在bug)
 ```
 hmget key field1 [field2]
 ```

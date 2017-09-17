@@ -38,7 +38,7 @@ shared_of_dict Db::getDict(const std::string &dict)
     if (p == m_nDicts.end()) //create new dict
     {
         std::shared_ptr<Dict<std::string, std::string>> newdict =
-            make_shared<Dict<std::string, std::string>>(dict);
+            std::make_shared<Dict<std::string, std::string>>(dict);
         m_nDicts[dict] = newdict;
         return newdict;
     }
@@ -67,7 +67,7 @@ shared_of_list Db::getList(const std::string &list)
     if (p == m_nLists.end()) //create new list
     {
         shared_of_list newlist =
-            make_shared<List<std::string>>(list);
+            std::make_shared<List<std::string>>(list);
         m_nLists[list] = newlist;
         return newlist;
     }
@@ -90,7 +90,7 @@ Db::~Db()
 
 Server::Server()
 {
-    m_pPersist = make_shared<Persist>(m_nDbFile);
+    m_pPersist = std::make_shared<Persist>(m_nDbFile);
     m_nRun = true;
 
     LOG(Debug) << "class Server constructor\n";
@@ -110,7 +110,7 @@ void Server::listDbs(void)
 {
     std::cout << Db::m_nDbsNum << ":" << std::endl;
     for (auto t : m_nDbs)
-        std::cout << t.second->getNumber() << "):" << t.first << endl;
+        std::cout << t.second->getNumber() << "):" << t.first << std::endl;
 }
 
 bool Server::createDb(const std::string &db)
@@ -121,7 +121,7 @@ bool Server::createDb(const std::string &db)
         std::cout << "(error) " << db << "existed,can't create\n";
         return false;
     }
-    std::shared_ptr<Db> newdb = make_shared<Db>(db);
+    std::shared_ptr<Db> newdb = std::make_shared<Db>(db);
     m_nDbs[db] = newdb;
     return true;
 }
@@ -141,7 +141,7 @@ bool Server::deleteDb(const std::string &db)
     }
     else
     {
-        std::cout << "(error) can't delete " << db << endl;
+        std::cout << "(error) can't delete " << db << std::endl;
     }
 }
 
@@ -151,11 +151,11 @@ bool Server::selectCurrDb(const std::string &db)
     if (p != m_nDbs.end())
     {
         m_nCurrDb = p->second;
-        std::cout << "select db (" << db << ")" << endl;
+        std::cout << "select db (" << db << ")" << std::endl;
     }
     else
     {
-        std::cout << "(error) can't select (" << db << ")" << endl;
+        std::cout << "(error) can't select (" << db << ")" << std::endl;
     }
 }
 

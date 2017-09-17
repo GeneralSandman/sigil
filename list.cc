@@ -21,7 +21,7 @@ bool lmemCommand(std::deque<std::string> &args)
         return false;
     }
 
-    vector<string> res;
+    std::vector<std::string> res;
     if (p_list->getAll(res))
     {
         std::cout << "length: " << res.size() << std::endl;
@@ -249,7 +249,7 @@ bool lrangeCommand(std::deque<std::string> &args)
     int begin = atoi(args[0].c_str());
     int end = atoi(args[1].c_str());
 
-    vector<string> res;
+    std::vector<std::string> res;
     if (p_list->getByRange(res, begin, end))
     {
         for (int i = 0, index = begin; i < res.size(); i++, index++)
