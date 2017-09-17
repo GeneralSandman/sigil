@@ -93,10 +93,17 @@ Server::Server()
     m_pPersist = make_shared<Persist>(m_nDbFile);
     m_nRun = true;
 
-    createDb("init");
-    selectCurrDb("init");
-
     LOG(Debug) << "class Server constructor\n";
+}
+
+void Server::check()
+{
+    //check if have init datebase
+    if (getDbsNum() == 0)
+    {
+        createDb("init");
+    }
+    selectCurrDb("init");
 }
 
 void Server::listDbs(void)
@@ -191,6 +198,7 @@ bool Server::bgsave()
 bool Server::load()
 {
     m_pPersist->load();
+    check();//check have init database
 }
 
 Server::~Server()

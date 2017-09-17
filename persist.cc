@@ -143,17 +143,16 @@ int Persist::m_fLoadList(std::shared_ptr<Db> db)
     m_fLoadInt(list_len);
 
     std::cout << "list_name:" << list_name
-              << "list_len:" << list_len << std::endl;
+              << ",list_len:" << list_len << std::endl;
 
-    shared_of_list p_list = db->findList(list_name);
+    shared_of_list p_list = db->getList(list_name);
     for (int i = 0; i < list_len; i++)
     {
         string value;
         m_fLoadString(value);
         std::cout << "add to list:" << value << std::endl;
-        p_list->add_head(value);
+        p_list->add_tail(value);
     }
-    std::cout << "lists num-" << db->m_nLists.size() << std::endl;
 }
 
 int Persist::m_fLoadDict()

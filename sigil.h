@@ -66,7 +66,7 @@ private:
   bool m_nRun;
   std::string m_nPersistFile;
   Server();
-
+  void check();
 public:
   void listDbs(void);
   bool createDb(const std::string &db);
