@@ -35,7 +35,7 @@ public:
   int m_fLoadKeyValue(std::string &, std::string &);
   int m_fLoadDb();
   int m_fLoadList(std::shared_ptr<Db> db);
-  int m_fLoadDict();
+  int m_fLoadDict(std::shared_ptr<Db> db);
 
 public:
   Persist(const std::string &);

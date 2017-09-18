@@ -23,8 +23,10 @@ int Persist::m_fSaveString(const std::string &s)
     m_pSaveFileIO->ioWrite(s.c_str(), s.size());
 }
 
-int Persist::m_fSaveKeyValue(const std::string &k, const std::string &y)
+int Persist::m_fSaveKeyValue(const std::string &k, const std::string &v)
 {
+    m_fSaveString(k);
+    m_fSaveString(v);
 }
 
 class Db;
@@ -39,16 +41,20 @@ int Persist::m_fSaveDb(std::shared_ptr<Db> d)
     m_fSaveInt(db_number);
 
     int lists_num = d->m_nLists.size();
+    int dicts_num = d->m_nDicts.size();
 
     std::cout << "db_name:" << db_name
               << ",db_number:" << db_number
-              << ",lists num:" << lists_num << std::endl;
+              << ",lists num:" << lists_num
+              << ",dicts num:" << dicts_num << std::endl;
 
     m_fSaveInt(lists_num);
     for (auto list : d->m_nLists)
         m_fSaveList(list.second);
-    // for (auto dict : d->m_nDicts)
-    //     m_fSaveDict(dict.second);
+
+    m_fSaveInt(dicts_num);
+    for (auto dict : d->m_nDicts)
+        m_fSaveDict(dict.second);
 }
 
 template <typename T>
@@ -56,7 +62,7 @@ class List;
 int Persist::m_fSaveList(std::shared_ptr<List<std::string>> list)
 {
     int len = list->getLen();
-    if (!len)//list have no node,needn't to save this list
+    if (!len) //list have no node,needn't to save this list
         return 0;
     m_fSaveCode(DB_CODE_LIST);
     m_fSaveString(list->getName());
@@ -67,7 +73,7 @@ int Persist::m_fSaveList(std::shared_ptr<List<std::string>> list)
 
     ListIter<std::string> iter(list.get(), AL_START_HEAD);
     ListNode<std::string> *t = nullptr;
-    while (t = iter.getListNext())
+    while ((t = iter.getListNext()) != nullptr)
     {
         m_fSaveString(t->m_nValue);
         std::cout << "save " << t->m_nValue << std::endl;
@@ -76,6 +82,23 @@ int Persist::m_fSaveList(std::shared_ptr<List<std::string>> list)
 
 int Persist::m_fSaveDict(std::shared_ptr<Dict<std::string, std::string>> dict)
 {
+    int size = dict->dictLen();
+    if (!size)
+        return 0;
+    m_fSaveCode(DB_CODE_DICT);
+    m_fSaveString(dict->getName());
+    m_fSaveInt(size);
+
+    std::cout << "dict_name:" << dict->getName()
+              << ",dict_len:" << size << std::endl;
+
+    DictIter<std::string, std::string> iter(dict.get());
+    DictEntry<std::string, std::string> *t = nullptr;
+    while ((t = iter.getDictNext()) != nullptr)
+    {
+        m_fSaveKeyValue(t->getKey(), t->getValue());
+        std::cout << "save - " << t->getKey() << ":" << t->getValue() << std::endl;
+    }
 }
 
 int Persist::m_fLoadInt(int &i)
@@ -102,6 +125,8 @@ int Persist::m_fLoadString(std::string &s)
 
 int Persist::m_fLoadKeyValue(std::string &k, std::string &v)
 {
+    m_fLoadString(k);
+    m_fLoadString(v);
 }
 
 int Persist::m_fLoadDb()
@@ -119,17 +144,20 @@ int Persist::m_fLoadDb()
     std::shared_ptr<Db> newdb = std::make_shared<Db>(db_name);
     Server::getServerInstace()->m_nDbs[db_name] = newdb;
 
-    int lists_num = 0;
+    int lists_num = 0, dicts_num = 0;
+
     m_fLoadInt(lists_num);
+    for (int i = 0; i < lists_num; i++)
+        m_fLoadList(newdb);
+    
+    m_fLoadInt(dicts_num);    
+    for (int i = 0; i < dicts_num; i++)
+        m_fLoadDict(newdb);
 
     std::cout << "db_name:" << db_name
               << ",db_number:" << db_number
-              << ",lists num:" << lists_num << std::endl;
-
-    for (int i = 0; i < lists_num; i++)
-    {
-        m_fLoadList(newdb);
-    }
+              << ",lists num:" << lists_num
+              << ",dicts num:" << dicts_num << std::endl;
 }
 
 int Persist::m_fLoadList(std::shared_ptr<Db> db)
@@ -155,8 +183,29 @@ int Persist::m_fLoadList(std::shared_ptr<Db> db)
     }
 }
 
-int Persist::m_fLoadDict()
+int Persist::m_fLoadDict(std::shared_ptr<Db> db)
 {
+    int code;
+    std::string dict_name;
+    int dict_len;
+
+    m_fLoadCode(code);
+    m_fLoadString(dict_name);
+    m_fLoadInt(dict_len);
+
+    std::cout << "dict_name:" << dict_name
+              << ",dict_len:" << dict_len << std::endl;
+
+    shared_of_dict p_dict =
+        db->getDict(dict_name);
+    for (int i = 0; i < dict_len; i++)
+    {
+        std::string k, v;
+        m_fLoadKeyValue(k, v);
+        std::cout << "load - "
+                  << k << ":" << v << std::endl;
+        p_dict->dictSet(k, v);
+    }
 }
 
 Persist::Persist(const std::string &file)
@@ -182,10 +231,6 @@ bool Persist::save()
         m_fSaveDb(db.second);
     }
     m_fSaveCode(DB_CODE_EOF);
-
-    // std::cout << "head:" << head << std::endl;
-    // std::cout << "dbsNum:" << 5 << std::endl;
-    // std::cout << "code:" << DB_CODE_EOF << std::endl;
 
     return true;
 }

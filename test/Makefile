@@ -3,8 +3,8 @@ gcc11 = g++ -std=c++11 -c -o
 
 binaryfile_test:binaryfile_test.o
 	$(link) binaryfile_test binaryfile_test.o
-dict_test:dict_test.o dict.o log.o sigil.o
-	$(link) dict_test dict_test.o dict.o log.o sigil.o
+dict_test:dict_test.o dict.o list.o sigil.o log.o persist.o io.o
+	$(link) dict_test dict_test.o dict.o list.o sigil.o log.o persist.o io.o
 list_test:list_test.o list.o log.o sigil.o persist.o io.o
 	$(link) list_test list_test.o list.o log.o sigil.o persist.o io.o
 server_test:server_test.o dict.o list.o sigil.o log.o persist.o io.o

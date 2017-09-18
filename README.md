@@ -1,11 +1,6 @@
 # sigil
 
-
-hset myhash field1 "Hello" field2 "World"
-
-hget myhash field1
-
-# >1.数据库的基本操作
+> # 1.数据库的基本操作
 - 显示所有数据库
 ```
 dbs
@@ -30,6 +25,12 @@ deletedb <db>
 deletedb <db1> <db2>
 ```
 
+- 持久化
+```
+save
+bgsave
+```
+
 - 退出sigil
 
 ```
@@ -41,9 +42,7 @@ Ctrl-c(增加了信号处理)
 
 > 列表按照插入顺序排列,如果列表不存在，push操作会创建一个新列表，而其他命令会报错；但是llen不会创建一个新列表，也不会报错，只是返回零。
 
-|命令|操作|
-|:-------:|:-------:|
-|LPUSH key value1 [value2] |在key的头部插入值|
+
 
 - 获取所有元素
 ```
@@ -131,11 +130,67 @@ hlen key
 hclear key
 ```
 
-># 4.数据库的持久化
+># 4.集合（Set）
 
----
+- 向集合添加一个或多个成员
+```
+sadd key value1 [value2] 
+```
 
-## 日志使用方法（test/test_log.cc）
+- 移除并返回集合中的一个随机元素
+```
+spop key
+```
+
+- 移除指定value的元素
+```
+srem key
+```
+
+- 获取集合的元素数量
+```
+scard key
+```
+
+- 获取集合所有元素
+```
+smem key
+```
+- 判断value是否存在于set集合
+```
+sismem key value
+```
+- 返回两个集合的交集
+```
+sinter key1 key2
+```
+- 返回两个集合的并集
+```
+sunion key1 key2
+```
+- 返回两个集合的差集
+```
+sdiff key1 key2
+```
+
+4	SDIFFSTORE destination key1 [key2] 
+返回给定所有集合的差集并存储在 destination 中
+6	SINTERSTORE destination key1 [key2] 
+返回给定所有集合的交集并存储在 destination 中
+9	SMOVE source destination member 
+将 member 元素从 source 集合移动到 destination 集合
+11	SRANDMEMBER key [count] 
+返回集合中一个或多个随机数
+14	SUNIONSTORE destination key1 [key2] 
+所有给定集合的并集存储在 destination 集合中
+15	SSCAN key cursor [MATCH pattern] [COUNT count] 
+迭代集合中的元素
+
+># 5.数据库的持久化
+
+------
+
+## 1.日志使用方法（test/test_log.cc）
 ```
 日志采用单例 (Meyers Singleton) 模式
 ```
@@ -172,3 +227,49 @@ level 为本条日志级别，information为日志信息
 单条日志级别如果比系统日志等级小，则本条日志将被忽略。
 
 栗：如果当前系统日志等级为Info,则LOG(Debug)无效，其余均有效。
+
+
+## 2.配置文件（sigil.conf）
+配置文件为[HCNON格式]!()
+1.安装解析HCNON依赖
+
+Build Requirements
+
+OSX or Linux
+GCC >= 4.8 or Clang >= 3.4 (with libc++)
+CMake >= 3.2.2
+Boost Libraries >= 1.54
+Leatherman
+
+- Building Leatherman
+```
+git clone https://github.com/puppetlabs/leatherman
+cd leatherman
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+```
+
+- Pre-Build
+
+```
+git clone https://github.com/puppetlabs/cpp-hocon
+cd cpp-hocon
+mkdir release
+cd release
+cmake ..
+
+mkdir debug
+cd debug
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+
+cd ../release
+make
+make install
+
+make test
+
+
+```

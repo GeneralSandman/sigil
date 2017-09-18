@@ -18,6 +18,8 @@ template <typename K, typename V>
 class Dict;
 template <typename K, typename V>
 class DictTable;
+template <typename K, typename V>
+class DictIter;
 
 template <typename K, typename V>
 class DictEntry
@@ -32,6 +34,8 @@ class DictEntry
 	{
 		LOG(Debug) << "class DictEntry constructor" << std::endl;
 	}
+	K getKey() { return m_nKey; }
+	V getValue() { return m_nValue; }
 	~DictEntry()
 	{
 		m_pNext = nullptr;
@@ -40,6 +44,7 @@ class DictEntry
 
 	friend class Dict<K, V>;
 	friend class DictTable<K, V>;
+	friend class DictIter<K, V>;
 };
 
 template <typename K, typename V>
@@ -56,7 +61,7 @@ class DictTable
 	DictEntry<K, V> *m_fFindEntry(const K &);
 
   public:
-	DictTable(size_t size = 2);
+	DictTable(size_t size = 4);
 	bool insertPair(const K &, const V &);
 	bool findPair(const K &, V &);
 	bool deletePair(const K &);
@@ -65,6 +70,7 @@ class DictTable
 	~DictTable();
 
 	friend class Dict<K, V>;
+	friend class DictIter<K, V>;
 };
 
 template <typename K>
@@ -93,6 +99,7 @@ class Dict
 		LOG(Debug) << "class Dict constructor\n";
 	};
 
+	std::string getName() { return m_nDictName; }
 	bool dictSet(const K &key, const V value)
 	{
 		if (!m_nReHash)
@@ -135,6 +142,112 @@ class Dict
 		delete m_pTables[0];
 		delete m_pTables[1];
 		LOG(Debug) << "class Dict destructor\n";
+	}
+
+	friend class DictIter<K, V>;
+};
+
+//The function of ListIter is traversal all
+//the ListNode of List,in order to persist
+//the list data
+template <typename K, typename V>
+class DictIter
+{
+  private:
+	Dict<K, V> *m_pDict;
+	DictEntry<K, V> *m_pNext_;
+	int m_nNoTraver;
+
+	int m_nTab;   //table number
+	int m_nIndex; //index number
+
+  public:
+	DictIter(Dict<K, V> *dict) : m_pDict(dict),
+								 m_pNext_(nullptr),
+								 m_nNoTraver(dict->dictLen()),
+								 m_nTab(0),
+								 m_nIndex(0)
+	{
+		m_pNext_ = *(m_pDict->m_pTables[m_nTab]->m_pTable + m_nIndex);
+
+		// reset2Begin();
+	}
+	DictEntry<K, V> *findNextBlut()
+	{
+		bool find = false;
+		int table_size = m_pDict->m_pTables[0]->m_nSize;
+
+		for (; m_nTab < 2; m_nTab++)
+		{
+			for (m_nIndex = 0; m_nIndex < table_size; m_nIndex++)
+			{
+				if (*(m_pDict->m_pTables[m_nTab]->m_pTable + m_nIndex) != nullptr)
+				{
+					find = true;
+					break;
+				}
+			}
+
+			if (find)
+				break;
+		}
+
+		if (find)
+			return *(m_pDict->m_pTables[m_nTab]->m_pTable + m_nIndex);
+	}
+	DictEntry<K, V> *getDictNext()
+	{
+		if (!m_nNoTraver)
+			return nullptr;
+
+		//There are Entrys haven't been traveraled;
+		m_nNoTraver--;
+		DictEntry<K, V> *res;
+
+		if (m_pNext_ == nullptr)
+		{
+			bool find = false;
+			m_nTab = 0;
+			m_nIndex = 0;
+			int table_size = m_pDict->m_pTables[0]->m_nSize;
+
+			for (; m_nTab < 2; m_nTab++)
+			{
+				for (m_nIndex = 0; m_nIndex < table_size; m_nIndex++)
+				{
+					if (*(m_pDict->m_pTables[m_nTab]->m_pTable + m_nIndex) != nullptr)
+					{
+						find = true;
+						break;
+					}
+				}
+
+				if (find)
+					break;
+			}
+
+			if (find)
+			{
+				m_pNext_ = *(m_pDict->m_pTables[m_nTab]->m_pTable + m_nIndex);
+				return m_pNext_;
+			}
+		}
+		else
+		{
+			if (m_pNext_->m_pNext != nullptr)
+				m_pNext_ = m_pNext_->m_pNext;
+			else
+			{ //this bules have finish
+				findNextBlut();
+			}
+		}
+
+		return res;
+	}
+	~DictIter()
+	{
+		m_pDict = nullptr;
+		m_pNext_ = nullptr;
 	}
 };
 

@@ -9,15 +9,24 @@ int main()
 {
     {
         string d = "db";
-        string key = "a";
-        string value = "a";
-
         Dict<string, string> newdict(d);
-        newdict.dictSet(key, value);
-        cout << newdict.dictGet(key) << endl;
 
-        newdict.dictSet(key, "123");
-        cout << newdict.dictGet(key) << endl;
+        for (int i = 0; i < 10; i++)
+        {
+            string key, value;
+            key += char(i);
+            value = key;
+
+            newdict.dictSet(key, value);
+        }
+        cout << "len:" << newdict.dictLen() << endl;
+        DictIter<string, string> iter(&newdict);
+        DictEntry<string, string> *next = nullptr;
+
+        while ((next = iter.getDictNext()) != nullptr)
+        {
+            cout << next->getKey() << ":" << next->getValue() << endl;
+        }
     }
 
     return 0;

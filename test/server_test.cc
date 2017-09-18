@@ -2,6 +2,7 @@
 #include "../sigil.h"
 #include "../log.h"
 #include "../list.h"
+#include "../set.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -36,7 +37,6 @@ int main()
             RegisterCommand("db", showCurrDbCommand);
             RegisterCommand("quit", quitCommand);
             RegisterCommand("save", saveCommand);
-            // RegisterCommand("bgsave",bgsaveCommand);
 
             //list
             RegisterCommand("lmem", lmemCommand);
@@ -58,11 +58,22 @@ int main()
             RegisterCommand("hlen", hlenCommand);
             RegisterCommand("hclear", hclearCommand);
 
+            //set
+            RegisterCommand("sadd", saddCommand);
+            RegisterCommand("spop", spopCommand);
+            RegisterCommand("srem", sremCommand);
+            RegisterCommand("scard", scardCommand);
+            RegisterCommand("smem", smemCommand);
+            RegisterCommand("sismem", sismemCommand);
+            RegisterCommand("sinter", sinterCommand);
+            RegisterCommand("sunion", sunionCommand);
+            RegisterCommand("sdiff", sdiffCommand);
+
             welcome();
             Command com(server);
             while (server->runing())
             {
-                std::cout << "*sigil> ";
+                std::cout << "^_^sigil> ";
                 com.waitCommand();
             }
 
