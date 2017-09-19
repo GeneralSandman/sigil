@@ -72,7 +72,7 @@ bool hgetCommand(std::deque<std::string> &args)
     std::string res;
     if (d->dictGet(key, res))
     {
-        std::cout << res << std::endl;
+        std::cout << key << ":" << res << std::endl;
         return true;
     }
     else
@@ -97,6 +97,12 @@ bool hmgetCommand(std::deque<std::string> &args)
     std::shared_ptr<Dict<std::string, std::string>> d =
         Server::getCurrDb()->findDict(dict);
 
+    if (d == nullptr)
+    {
+        std::cout << "(error) no dict \"" << dict << "\"" << std::endl;
+        return false;
+    }
+
     while (args.size())
     {
         std::string key = args.front();
@@ -104,7 +110,7 @@ bool hmgetCommand(std::deque<std::string> &args)
 
         std::string res;
         if (d->dictGet(key, res))
-            std::cout << res << std::endl;
+            std::cout << key << ":" << res << std::endl;
     }
 
     return true;
@@ -126,11 +132,17 @@ bool hlenCommand(std::deque<std::string> &args)
         Server::getCurrDb()->findDict(dict);
 
     int length = 0;
-    if (d != nullptr)
+    if (d == nullptr)
+    {
+        std::cout << "(error) no dict \"" << dict << "\"" << std::endl;
+        return false;
+    }
+    else
+    {
         length = d->dictLen();
-    std::cout << "length:" << length << std::endl;
-
-    return true;
+        std::cout << "length:" << length << std::endl;
+        return true;
+    }
 }
 
 bool hclearCommand(std::deque<std::string> &args)
@@ -144,11 +156,14 @@ bool hclearCommand(std::deque<std::string> &args)
     std::string dict = args[0];
     std::shared_ptr<Dict<std::string, std::string>> d =
         Server::getCurrDb()->findDict(dict);
-    if (d != nullptr)
+    if (d == nullptr)
+    {
+        std::cout << "(error) no dict \"" << dict << "\"" << std::endl;
+        return false;
+    }
+    else
     {
         d->dictClear();
         return true;
     }
-    else
-        return false;
 }
