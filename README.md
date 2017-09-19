@@ -1,4 +1,8 @@
-# sigil
+# **sigil**
+
+***
+******
+--------
 
 > # 1.数据库的基本操作
 - 显示所有数据库
@@ -32,11 +36,22 @@ bgsave
 ```
 
 - 退出sigil
-
 ```
 quit
 Ctrl-c(增加了信号处理)
 ```
+
+- 获取上一条/下一条命令：```↑ ↓```
+
+- history命令
+    - ```history```：获取本次开启服务所有执行命令 
+    - ```history n```：获取本次开启服务前n条命令
+    - ```history -n```：最后n条命令
+    - ```history -c```：清除本次缓存中的所有命令，并写入文件中
+    - ```history -w```：保存命名到本地文件中，用于恢复
+
+
+- 帮助命令：```help```
 
 > # 2.列表(list)
 
@@ -190,7 +205,7 @@ sdiff key1 key2
 
 ------
 
-## 1.日志使用方法（test/test_log.cc）
+## 一、日志使用方法（test/test_log.cc）
 ```
 日志采用单例 (Meyers Singleton) 模式
 ```
@@ -223,7 +238,7 @@ level 为本条日志级别，information为日志信息
 ### 4.程序结束时无需释放内存
 
 
-### 3.注意事项
+### 5.注意事项
 单条日志级别如果比系统日志等级小，则本条日志将被忽略。
 
 栗：如果当前系统日志等级为Info,则LOG(Debug)无效，其余均有效。
@@ -235,7 +250,27 @@ ldconfig -p | grep readline
 显示libreadline.so.6 (libc6,x86-64) => /lib/x86_64-linux-gnu/libreadline.so.6
 
 
-## 2.配置文件（sigil.conf）
+## 二、各种依赖
+
+### 1.sigil依赖readline库
+- [readline安装方法](http://blog.csdn.net/zmrlinux/article/details/47052797)
+- 查看动态库
+```
+ldconfig -p ｜ grep readline
+```
+显示为
+```
+libreadline.so.6 (libc6,x86-64) => /lib/x86_64-linux-gnu/libreadline.so.6
+libguilereadline-v-18.so.18 (libc6,x86-64) => /usr/lib/x86_64-linux-gnu/libguilereadline-v-18.so.18
+libguilereadline-v-18.so (libc6,x86-64) => /usr/lib/x86_64-linux-gnu/libguilereadline-v-18.so
+```
+- 修改Makefile中readline变量中的动态库改为
+```
+/usr/lib/x86_64-linux-gnu/libreadline.so
+```
+
+
+配置文件（sigil.conf）
 配置文件为[HCNON格式]!()
 1.安装解析HCNON依赖
 
