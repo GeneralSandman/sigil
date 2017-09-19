@@ -13,7 +13,7 @@ lib.o = $(foreach file,$(lib),$(file).o)
 lib.cc = $(foreach file,$(lib),../$(file).cc)
 
 
-server_test:server_test.o
+server_test:server_test.o $(datastruct.cc) $(lib.cc)
 	$(gcc11) $(datastruct.cc)
 	$(gcc11) $(lib.cc)
 	$(link) server_test server_test.o $(datastruct.o) $(lib.o) $(readline)
@@ -33,7 +33,7 @@ io_test:io_test.o io.o log.o api.o
 	$(link) io_test io_test.o io.o log.o api.o
 persist_test:persist_test.o persist.o io.o log.o api.o sigil.o
 	$(link) persist_test persist_test.o persist.o io.o log.o api.o sigil.o
-readline_test:
+readline_test:readline_test.cc
 	g++ -std=c++11 -o readline_test readline_test.cc $(readline)
 
 binaryfile_test.o:binaryfile_test.cc
