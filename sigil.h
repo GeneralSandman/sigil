@@ -67,6 +67,7 @@ private:
   std::string m_nPersistFile;
   Server();
   void check();
+
 public:
   void listDbs(void);
   bool createDb(const std::string &db);
@@ -102,34 +103,7 @@ public:
   friend class Persist;
 };
 
-class Command
-{
-private:
-  Server *m_pServer;
-  Db *m_pDb;
-  char m_nStr[256];
-  std::string m_nName;
-  std::deque<std::string> m_nArgs;
 
-  int m_fGetCommand();
-  void m_fParseCommand();
-  void m_fInvokeCommand();
-
-public:
-  Command(Server *s)
-  {
-    m_pServer = s;
-  }
-  void waitCommand()
-  {
-    memset(m_nStr, 0, 256);
-    m_nName = "";
-    m_nArgs.clear();
-    m_fGetCommand();
-    m_fParseCommand();
-    m_fInvokeCommand();
-  }
-};
 
 #define RegisterCommand(name, c) \
   Server::regitCommand(name, c)

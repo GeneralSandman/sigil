@@ -161,25 +161,14 @@ class DictIter
 	int m_nTab;   //table number
 	int m_nIndex; //index number
 
-  public:
-	DictIter(Dict<K, V> *dict) : m_pDict(dict),
-								 m_pNext_(nullptr),
-								 m_nNoTraver(dict->dictLen()),
-								 m_nTab(0),
-								 m_nIndex(0)
-	{
-		m_pNext_ = *(m_pDict->m_pTables[m_nTab]->m_pTable + m_nIndex);
-
-		// reset2Begin();
-	}
-	DictEntry<K, V> *findNextBlut()
+	DictEntry<K, V> *m_fFindNextEntry()
 	{
 		bool find = false;
 		int table_size = m_pDict->m_pTables[0]->m_nSize;
 
 		for (; m_nTab < 2; m_nTab++)
 		{
-			for (m_nIndex = 0; m_nIndex < table_size; m_nIndex++)
+			for (; m_nIndex < table_size; m_nIndex++)
 			{
 				if (*(m_pDict->m_pTables[m_nTab]->m_pTable + m_nIndex) != nullptr)
 				{
@@ -194,6 +183,27 @@ class DictIter
 
 		if (find)
 			return *(m_pDict->m_pTables[m_nTab]->m_pTable + m_nIndex);
+		else
+			return nullptr;
+	}
+
+  public:
+	DictIter(Dict<K, V> *dict) : m_pDict(dict),
+								 m_pNext_(nullptr),
+								 m_nNoTraver(dict->dictLen()),
+								 m_nTab(0),
+								 m_nIndex(0)
+	{
+		m_pNext_ = m_fFindNextEntry();
+		// reset2Begin();
+	}
+
+	void reset2Begin()
+	{
+		m_nNoTraver = m_pDict->dictLen();
+		m_nTab = 0;
+		m_nIndex = 0;
+		m_pNext_ = m_fFindNextEntry();
 	}
 	DictEntry<K, V> *getDictNext()
 	{
@@ -202,45 +212,24 @@ class DictIter
 
 		//There are Entrys haven't been traveraled;
 		m_nNoTraver--;
-		DictEntry<K, V> *res;
+		DictEntry<K, V> *res = m_pNext_;
 
-		if (m_pNext_ == nullptr)
-		{
-			bool find = false;
-			m_nTab = 0;
-			m_nIndex = 0;
-			int table_size = m_pDict->m_pTables[0]->m_nSize;
-
-			for (; m_nTab < 2; m_nTab++)
-			{
-				for (m_nIndex = 0; m_nIndex < table_size; m_nIndex++)
-				{
-					if (*(m_pDict->m_pTables[m_nTab]->m_pTable + m_nIndex) != nullptr)
-					{
-						find = true;
-						break;
-					}
-				}
-
-				if (find)
-					break;
-			}
-
-			if (find)
-			{
-				m_pNext_ = *(m_pDict->m_pTables[m_nTab]->m_pTable + m_nIndex);
-				return m_pNext_;
-			}
-		}
-		else
+		bool findNext = false;
+		if (m_pNext_ != nullptr)
 		{
 			if (m_pNext_->m_pNext != nullptr)
+			{
 				m_pNext_ = m_pNext_->m_pNext;
+			}
 			else
-			{ //this bules have finish
-				findNextBlut();
+			{
+				findNext = true;
+				m_nIndex++;
 			}
 		}
+
+		if (findNext)
+			m_pNext_ = m_fFindNextEntry();
 
 		return res;
 	}

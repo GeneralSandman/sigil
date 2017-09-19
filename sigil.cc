@@ -1,7 +1,9 @@
 #include "sigil.h"
+#include "command.h"
 #include "log.h"
 #include "persist.h"
 #include <iostream>
+
 
 int Db::m_nDbsNum = 0;
 int Db::m_nCreatedDbs = 0;
@@ -198,7 +200,7 @@ bool Server::bgsave()
 bool Server::load()
 {
     m_pPersist->load();
-    check();//check have init database
+    check(); //check have init database
 }
 
 Server::~Server()
@@ -212,49 +214,7 @@ Server::~Server()
 }
 //////
 
-////////command api
-int Command::m_fGetCommand()
-{
-    std::cin.getline(m_nStr, 256, '\n');
-}
 
-void Command::m_fParseCommand()
-{
-    int length = strlen(m_nStr);
-    std::string tmp;
-
-    for (int i = 0; i < length; i++)
-    {
-        if (m_nStr[i] != ' ')
-        {
-            tmp += m_nStr[i];
-        }
-        else
-        {
-            if (!tmp.empty())
-                m_nArgs.push_back(tmp);
-            tmp = "";
-        }
-    }
-    if (!tmp.empty())
-        m_nArgs.push_back(tmp);
-
-    m_nName = m_nArgs.front();
-    m_nArgs.pop_front();
-}
-
-void Command::m_fInvokeCommand()
-{
-    auto com = m_pServer->findCommand(m_nName);
-    if (com != nullptr)
-    {
-        com(m_nArgs);
-    }
-    else
-    {
-        std::cout << "(error) not command \"" << m_nName << "\"\n";
-    }
-}
 
 //// XXXCommand function will be regist
 

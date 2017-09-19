@@ -1,2 +1,12 @@
 [20170908203700]--[Info]--function (main)line 20:
 [20170908203702]--[Info]--function (main)line 20:
+[20170918180432]--[Info]--function (listDbsCommand)line 263:command (dbs)
+[20170918180441]--[Info]--function (hsetCommand)line 9:command (hset)
+[20170918180450]--[Info]--function (quitCommand)line 325:command (quit)
+[20170918180508]--[Info]--function (hlenCommand)line 115:command (hlen)
+[20170918180514]--[Info]--function (hgetCommand)line 56:command (hget)
+[20170918180517]--[Info]--function (quitCommand)line 325:command (quit)
+[20170918203412]--[Info]--function (hsetCommand)line 9:command (hset)
+[20170918203425]--[Info]--function (hgetCommand)line 56:command (hget)
+[20170918203428]--[Info]--function (quitCommand)line 325:command (quit)
+[20170919100243]--[Info]--function (quitCommand)line 285:command (quit)

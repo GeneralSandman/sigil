@@ -1,5 +1,6 @@
 #include "../dict.h"
 #include "../sigil.h"
+#include "../command.h"
 #include "../log.h"
 #include "../list.h"
 #include "../set.h"
@@ -58,22 +59,21 @@ int main()
             RegisterCommand("hlen", hlenCommand);
             RegisterCommand("hclear", hclearCommand);
 
-            //set
-            RegisterCommand("sadd", saddCommand);
-            RegisterCommand("spop", spopCommand);
-            RegisterCommand("srem", sremCommand);
-            RegisterCommand("scard", scardCommand);
-            RegisterCommand("smem", smemCommand);
-            RegisterCommand("sismem", sismemCommand);
-            RegisterCommand("sinter", sinterCommand);
-            RegisterCommand("sunion", sunionCommand);
-            RegisterCommand("sdiff", sdiffCommand);
+            // //set
+            // RegisterCommand("sadd", saddCommand);
+            // RegisterCommand("spop", spopCommand);
+            // RegisterCommand("srem", sremCommand);
+            // RegisterCommand("scard", scardCommand);
+            // RegisterCommand("smem", smemCommand);
+            // RegisterCommand("sismem", sismemCommand);
+            // RegisterCommand("sinter", sinterCommand);
+            // RegisterCommand("sunion", sunionCommand);
+            // RegisterCommand("sdiff", sdiffCommand);
 
             welcome();
             Command com(server);
             while (server->runing())
             {
-                std::cout << "^_^sigil> ";
                 com.waitCommand();
             }
 

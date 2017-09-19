@@ -229,6 +229,12 @@ level 为本条日志级别，information为日志信息
 栗：如果当前系统日志等级为Info,则LOG(Debug)无效，其余均有效。
 
 
+
+安装readline库
+ldconfig -p | grep readline  
+显示libreadline.so.6 (libc6,x86-64) => /lib/x86_64-linux-gnu/libreadline.so.6
+
+
 ## 2.配置文件（sigil.conf）
 配置文件为[HCNON格式]!()
 1.安装解析HCNON依赖
