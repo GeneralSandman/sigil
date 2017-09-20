@@ -12,6 +12,18 @@ inline void handleArgsError()
     std::cout << "(error) args error\n";
 }
 
+// int isNum(const char *s, int &num)
+// {
+//     //if s can convert to digit,return 1
+//     //1 1.2 1.9 1.9999 1.ddd 1dddd
+//     //return num=1;
+
+//     //else return 0(at the begin of s,no digit)
+//     //adf adf adf
+
+//     return 0;
+// }
+
 pid_t gettid();
 
 void handle_error(const char *msg);

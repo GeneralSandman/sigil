@@ -1,0 +1,60 @@
+                    Command
+//*********************//
+//******database*******//
+//*********************//
+dbs
+db
+select <database>
+createdb <database1> [database2]
+deletedb <database1> [database2]
+save
+bgsave
+quit
+- history命令
+    - ```history a```：获取本次开启服务所有(all)执行命令 
+    - ```history n```：获取本次开启服务前n条命令
+    - ```history -n```：最后n条命令
+    - ```history c```：先写入文件，再清除本次缓存中的所有命令
+
+
+//*********************//
+//********list*********//
+//*********************//
+lmem <list>
+lpush <list> <value1> [value2]
+rpush <list> <value1> [value2]
+lpop <list>
+rpop <list>
+llen <list>
+lindex <list> <index>
+lindex <list> <index> <value>
+linsert <list> before/after <pro_value> <new_value>
+lrange <list> <begin> <end>
+lrem <list> <value>
+lclear <list>
+
+
+//*********************//
+//********dict*********//
+//*********************//
+hset <hash> <key> <value>
+hget <hash> <key>
+hmset <hash> <key1> <value1> [<key2> <value2>]
+hmget <hash> <key1> [key2]
+hlen <hash>
+hclear <hash>
+
+
+//*********************//
+//********set**********//
+//*********************//
+sadd <set> <value1> [value2] 
+spop <set>
+srem <set>
+scard <set>
+smem <set>
+sismem <set> value
+sinter <set1> <set2>
+sunion <set1> <set2>
+sdiff <set1> <set2>
+

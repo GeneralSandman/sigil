@@ -1,5 +1,6 @@
 #include "command.h"
 #include "log.h"
+#include "api.h"
 #include <string>
 #include <deque>
 #include <readline/readline.h>
@@ -75,9 +76,50 @@ void Command::m_fSaveCommand()
 bool hisroryCommand(std::deque<std::string> &args)
 {
     LOG(Info) << "command (hisrory)" << std::endl;
+    if (args.size() != 1)
+    {
+        std::cout << "(error) args error\n";
+        return false;
+    }
+
+    // int num = 0;
+    // if (isNum(args[0].c_str(), num))
+    // {
+    //     if (num == 0)
+    //         num = 1;
+
+    //     if (num > 0)
+    //     {
+    //         for (int i = 0; i < num; i++)
+    //         {
+    //             std::cout << "\t" << i + 1 << std::endl;
+    //         }
+    //     }
+    //     else
+    //     {
+    //         for (int i = 0; i < num; i++)
+    //         {
+    //             std::cout << "\t-" << i + 1 << std::endl;
+    //         }
+    //     }
+    // }
+    // else
+    // {
+    //     if (args[0] == "a")
+    //     { //cout all history
+    //     }
+    //     else if (args[0] == "c")
+    //     { //storage command to file then clear history
+    //     }
+    // }
 }
 
 bool helpCommand(std::deque<std::string> &args)
 {
     LOG(Info) << "command (help)" << std::endl;
+    if (!args.empty())
+    {
+        std::cout << "(error) args error\n";
+        return false;
+    }
 }

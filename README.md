@@ -15,18 +15,16 @@ db
 ```
 - 选择数据库
 ```
-select <db>
+select <database>
 ```
 - 增加数据库
 ```
-createdb <db>
-createdb <db1> <db2>
+createdb <database1> [database2]
 ```
 - 删除数据库
 
 ```
-deletedb <db>
-deletedb <db1> <db2>
+deletedb <database1> [database2]
 ```
 
 - 持久化
@@ -44,11 +42,10 @@ Ctrl-c(增加了信号处理)
 - 获取上一条/下一条命令：```↑ ↓```
 
 - history命令
-    - ```history```：获取本次开启服务所有执行命令 
+    - ```history a```：获取本次开启服务所有(all)执行命令 
     - ```history n```：获取本次开启服务前n条命令
     - ```history -n```：最后n条命令
-    - ```history -c```：清除本次缓存中的所有命令，并写入文件中
-    - ```history -w```：保存命名到本地文件中，用于恢复
+    - ```history c```：先写入文件，再清除本次缓存中的所有命令
 
 
 - 帮助命令：```help```
@@ -61,55 +58,55 @@ Ctrl-c(增加了信号处理)
 
 - 获取所有元素
 ```
-lmem key
+lmem <list>
 ```
 
 - 在key的头部插入值
 ```
-lpush key value1 [value2]
+lpush <list> <value1> [value2]
 ```
 - 在key的尾部插入值
 ```
-rpush key value1 [value2]
+rpush <list> <value1> [value2]
 ```
 
 - 弹出并获取列表的第一个元素
 ```
-lpop key
+lpop <list>
 ```
 - 弹出并获取列表的最后一个元素
 ```
-rpop key
+rpop <list>
 ```
 
 - 获取列表的长度
 ```
-llen key
+llen <list>
 ```
 
-- 通过索引获取列表中的元素
+- 通过索引（digit）获取列表中的元素
 ```
-lindex key index
+lindex <list> <index>
 ```
-- 通过索引设置列表中的元素
+- 通过索引（digit）设置列表中的元素
 ```
-lindex key index value
+lindex <list> <index> <value>
 ```
 - 在列表元素前/后插入新元素
 ```
-linsert key before|after pro_value new_value
+linsert <list> before/after <pro_value> <new_value>
 ```
-- 获取指定区间的元素[begin,end)
+- 通过索引（digit）获取指定区间的元素[begin,end)
 ```
-lrange key begin end
+lrange <list> <begin> <end>
 ```
 - 移除指定元素
 ```
-lrem key value
+lrem <list> <value>
 ```
 - 清空列表
 ```
-lclear key
+lclear <list>
 ```
 
 ># 3.哈希(Hash)
@@ -119,73 +116,73 @@ lclear key
 
 - 将哈希表key中field的值设为value
 ```
-hset key field value
+hset <hash> <key> <value>
 ```
 
 - 获取哈希表key中field的值(存在bug)
 ```
-hget key field
+hget <hash> <key>
 ```
 
 - 同时将多个 field-value (域-值)对设置到哈希表 key 中
 ```
-hmset key field1 value1 [field2 value2 ]
+hmset <hash> <key1> <value1> [<key2> <value2>]
 ```
 - 同时获取哈希表key中的多个field的值(存在bug)
 ```
-hmget key field1 [field2]
+hmget <hash> <key1> [key2]
 ```
 - 获取字段数量
 ```
-hlen key
+hlen <hash>
 ```
 
 - 清空哈希表
 ```
-hclear key
+hclear <hash>
 ```
 
 ># 4.集合（Set）
 
 - 向集合添加一个或多个成员
 ```
-sadd key value1 [value2] 
+sadd <set> <value1> [value2] 
 ```
 
 - 移除并返回集合中的一个随机元素
 ```
-spop key
+spop <set>
 ```
 
 - 移除指定value的元素
 ```
-srem key
+srem <set>
 ```
 
 - 获取集合的元素数量
 ```
-scard key
+scard <set>
 ```
 
 - 获取集合所有元素
 ```
-smem key
+smem <set>
 ```
 - 判断value是否存在于set集合
 ```
-sismem key value
+sismem <set> value
 ```
 - 返回两个集合的交集
 ```
-sinter key1 key2
+sinter <set1> <set2>
 ```
 - 返回两个集合的并集
 ```
-sunion key1 key2
+sunion <set1> <set2>
 ```
 - 返回两个集合的差集
 ```
-sdiff key1 key2
+sdiff <set1> <set2>
 ```
 
 4	SDIFFSTORE destination key1 [key2] 
@@ -314,3 +311,8 @@ make test
 
 
 ```
+
+
+bug
+
+如果没有dict装载会错误
