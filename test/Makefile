@@ -4,7 +4,7 @@ gcc11o = $(gcc11) -o
 readline = /usr/lib/x86_64-linux-gnu/libreadline.so -I -lreadline\
 	-ltermcap -lncurses -g
 
-datastruct = list dict rb_tree
+datastruct = list dict rbtree
 datastruct.o = $(foreach file,$(datastruct),$(file).o)
 datastruct.cc = $(foreach file,$(datastruct),../$(file).cc)
 
@@ -26,7 +26,7 @@ dict_test:dict_test.o dict.o list.o sigil.o log.o persist.o io.o
 list_test:list_test.o list.o log.o sigil.o persist.o io.o
 	$(link) list_test list_test.o list.o log.o sigil.o persist.o io.o
 rbtree_test:rbtree_test.o server_test
-	$(link) rbtree_test rbtree_test.o rb_tree.o log.o
+	$(link) rbtree_test rbtree_test.o rbtree.o log.o
 log_test:log_test.o log.o
 	$(link) log_test log_test.o log.o
 virtual_test:virtual_test.o log.o
